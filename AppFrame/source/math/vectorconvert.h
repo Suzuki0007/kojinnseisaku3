@@ -65,4 +65,9 @@ namespace VC
 	{
 		return ::DrawCapsule3D(VecToDxLib(top), VecToDxLib(bottom), radius, division, edgeColor, capColor, fillFlag);
 	}
+
+	inline Vec4 ConvWorldPosToScreenPos(const Vec4& worldPos)
+	{
+		return ConvWorldPosToScreenPos(VecToDxLib(worldPos));
+	}
 }

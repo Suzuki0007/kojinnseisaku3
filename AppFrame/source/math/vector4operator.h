@@ -55,12 +55,12 @@ namespace v
 		return vec * mat;
 	}
 
-	inline float Dot(const Vec4& v1, const Vec4& v2)
+	inline float VDot(const Vec4& v1, const Vec4& v2)
 	{
 		return v1.Dot(v2);
 	}
 
-	inline Vec4 Cross(const Vec4& v1, const Vec4& v2)
+	inline Vec4 VCross(const Vec4& v1, const Vec4& v2)
 	{
 		return v1.Cross(v2);
 	}
