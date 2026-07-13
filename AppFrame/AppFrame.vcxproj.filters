@@ -1,0 +1,381 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="ソース ファイル">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;c++;cppm;ixx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="ヘッダー ファイル">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hh;hpp;hxx;h++;hm;inl;inc;ipp;xsd</Extensions>
+    </Filter>
+    <Filter Include="リソース ファイル">
+      <UniqueIdentifier>{67DA6AB6-F800-4c08-8B7A-83BB121AAD01}</UniqueIdentifier>
+      <Extensions>rc;ico;cur;bmp;dlg;rc2;rct;bin;rgs;gif;jpg;jpeg;jpe;resx;tiff;tif;png;wav;mfcribbon-ms</Extensions>
+    </Filter>
+    <Filter Include="ソース ファイル\アプリケーション">
+      <UniqueIdentifier>{c8977df5-4efe-4a87-8b35-205015dc0b94}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\モード">
+      <UniqueIdentifier>{a1896871-4149-4f64-896e-02cfc5fb8181}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\入力">
+      <UniqueIdentifier>{e7c6cf7b-f20d-40ad-8288-f190a21d127d}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\コンポーネント">
+      <UniqueIdentifier>{baf5ca5c-2a97-4a10-b165-43678a66176c}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\入力">
+      <UniqueIdentifier>{063b1ff8-4355-460c-9cbb-72b588ec0beb}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\モード">
+      <UniqueIdentifier>{fb319326-cb77-4d14-843c-d842240cb73e}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\lua">
+      <UniqueIdentifier>{8644dc12-86f8-4ecb-8747-e95c59af6d98}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\lua\lua">
+      <UniqueIdentifier>{93a95aba-6489-4905-b410-404dc37381e6}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ソース ファイル\lua\tolua">
+      <UniqueIdentifier>{a6e43c1e-0ed3-4d73-924c-84cb9c5d2411}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="source\Application\winmain.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Manager\timemanager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Application\applicationbase.cpp">
+      <Filter>ソース ファイル\アプリケーション</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Mode\ModeServer.cpp">
+      <Filter>ソース ファイル\モード</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Mode\ModeBase.cpp">
+      <Filter>ソース ファイル\モード</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Input\inputlocator.cpp">
+      <Filter>ソース ファイル\入力</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Input\keyboardinput.cpp">
+      <Filter>ソース ファイル\入力</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Input\padinput.cpp">
+      <Filter>ソース ファイル\入力</Filter>
+    </ClCompile>
+    <ClCompile Include="source\pch.cpp">
+      <Filter>ソース ファイル\入力</Filter>
+    </ClCompile>
+    <ClCompile Include="source\CFile\CFile.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\lapi.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\lauxlib.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\lbaselib.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\lcode.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\lctype.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\lcorolib.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\ldblib.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\ldebug.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\ldo.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\ldump.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\lfunc.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\lgc.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\linit.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\liolib.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\llex.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\lmathlib.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\lmem.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\loadlib.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\lobject.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\lopcodes.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\loslib.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\lparser.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\lstate.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\lstring.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\lstrlib.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\ltable.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\ltablib.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\ltm.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\lundump.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\lutf8lib.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\lvm.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\lua_src\lzio.c">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\tolua_src\tolua_event.c">
+      <Filter>ソース ファイル\lua\tolua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\tolua_src\tolua_is.c">
+      <Filter>ソース ファイル\lua\tolua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\tolua_src\tolua_map.c">
+      <Filter>ソース ファイル\lua\tolua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\tolua_src\tolua_push.c">
+      <Filter>ソース ファイル\lua\tolua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\lua\tolua_src\tolua_to.c">
+      <Filter>ソース ファイル\lua\tolua</Filter>
+    </ClCompile>
+    <ClCompile Include="source\CFile\utf8sjis.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Handle\safehandle.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Manager\animationmanager.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\animation\animationclip.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="source\appframe.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Application\utilmacro.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Application\applicationbase.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\CFile\CFile.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\mymath.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Manager\timemanager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\singleton.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math\vector4.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Component\actor.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Component\component.h">
+      <Filter>ヘッダー ファイル\コンポーネント</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Component\componentowner.h">
+      <Filter>ヘッダー ファイル\コンポーネント</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Input\keyboardinput.h">
+      <Filter>ヘッダー ファイル\入力</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Input\inputlocator.h">
+      <Filter>ヘッダー ファイル\入力</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Input\inputdevice.h">
+      <Filter>ヘッダー ファイル\入力</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Mode\ModeBase.h">
+      <Filter>ヘッダー ファイル\モード</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Mode\ModeServer.h">
+      <Filter>ヘッダー ファイル\モード</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Input\padinput.h">
+      <Filter>ヘッダー ファイル\入力</Filter>
+    </ClInclude>
+    <ClInclude Include="source\pch.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math\vector4operator.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math\vectorconvert.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math\matrix4.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\math\matrix4convert.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lua\lua_src\lapi.h">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lua\lua_src\lauxlib.h">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lua\lua_src\lcode.h">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lua\lua_src\lctype.h">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lua\lua_src\ldebug.h">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lua\lua_src\ldo.h">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lua\lua_src\lfunc.h">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lua\lua_src\lgc.h">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lua\lua_src\ljumptab.h">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lua\lua_src\llex.h">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lua\lua_src\llimits.h">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lua\lua_src\lmem.h">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lua\lua_src\lobject.h">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lua\lua_src\lopcodes.h">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lua\lua_src\lopnames.h">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lua\lua_src\lparser.h">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lua\lua_src\lprefix.h">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lua\lua_src\lstate.h">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lua\lua_src\lstring.h">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lua\lua_src\ltable.h">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lua\lua_src\ltm.h">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lua\lua_src\lua.hpp">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lua\lua_src\luaconf.h">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lua\lua_src\lualib.h">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lua\lua_src\lundump.h">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lua\lua_src\lvm.h">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lua\lua_src\lzio.h">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lua\tolua_src\tolua.h">
+      <Filter>ソース ファイル\lua\tolua</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lua\tolua_src\tolua_event.h">
+      <Filter>ソース ファイル\lua\tolua</Filter>
+    </ClInclude>
+    <ClInclude Include="source\lua\lua_src\lua.h">
+      <Filter>ソース ファイル\lua\lua</Filter>
+    </ClInclude>
+    <ClInclude Include="source\CFile\utf8sjis.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\state\statemachine.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Resource\resourcefacade.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Resource\resourceserver.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Component\componentbindable.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Handle\safehandle.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Manager\animationmanager.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\animation\animationclip.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+  </ItemGroup>
+</Project>
