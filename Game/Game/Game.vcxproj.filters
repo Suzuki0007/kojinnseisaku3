@@ -37,6 +37,12 @@
     <Filter Include="ヘッダー ファイル\コマンド\受信者">
       <UniqueIdentifier>{de1bee08-ce91-43ae-af41-c982021ff6b9}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\ターゲット関連">
+      <UniqueIdentifier>{73bee73a-2944-4e65-a0cf-0ef32863a025}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\ターゲット関連">
+      <UniqueIdentifier>{65e796ac-3acd-4c12-bc2f-b89a14e2c304}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="source\modegame.h">
@@ -195,6 +201,15 @@
     <ClInclude Include="source\speedcomponent.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="source\targetstrategybase.h">
+      <Filter>ヘッダー ファイル\ターゲット関連</Filter>
+    </ClInclude>
+    <ClInclude Include="source\targetstrategy.h">
+      <Filter>ヘッダー ファイル\ターゲット関連</Filter>
+    </ClInclude>
+    <ClInclude Include="source\neartargetstrategy.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\applicationmain.cpp">
@@ -336,6 +351,12 @@
       <Filter>ソース ファイル</Filter>
     </ClCompile>
     <ClCompile Include="source\animationcomponent.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\targetstrategybase.cpp">
+      <Filter>ソース ファイル\ターゲット関連</Filter>
+    </ClCompile>
+    <ClCompile Include="source\neartargetstrategy.cpp">
       <Filter>ソース ファイル</Filter>
     </ClCompile>
   </ItemGroup>

@@ -214,6 +214,8 @@
     <ClInclude Include="source\Manager\timemanager.h" />
     <ClInclude Include="source\math\matrix4.h" />
     <ClInclude Include="source\math\matrix4convert.h" />
+    <ClInclude Include="source\math\quaternion.h" />
+    <ClInclude Include="source\math\quaternionmatvec.h" />
     <ClInclude Include="source\math\vector4.h" />
     <ClInclude Include="source\math\vector4operator.h" />
     <ClInclude Include="source\math\vectorconvert.h" />
@@ -355,6 +357,8 @@
     </ClCompile>
     <ClCompile Include="source\Manager\animationmanager.cpp" />
     <ClCompile Include="source\Manager\timemanager.cpp" />
+    <ClCompile Include="source\math\quaternion.cpp" />
+    <ClCompile Include="source\math\quaternionmatvec.cpp" />
     <ClCompile Include="source\Mode\ModeBase.cpp" />
     <ClCompile Include="source\Mode\ModeServer.cpp" />
     <ClCompile Include="source\pch.cpp">
