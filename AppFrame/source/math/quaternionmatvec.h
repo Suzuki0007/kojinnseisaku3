@@ -11,6 +11,17 @@ public:
 	QuaternionMatVec() = default;
 	virtual ~QuaternionMatVec() = default;
 
+	NDCE T Dot(const Quaternion<T>& q1, const Quaternion<T>& q2) const noexcept
+	{
+		return q1.x * q2.x + q1.y * q2.y + q1.z * q2.z + q1.w * q2.w;
+	}
+	
+	NDCE T Angle(const Quaternion<T>& q1, const Quaternion<T>& q2) const noexcept
+	{
+		T d = std::clamp(std::abs(Dot(q1, q2)), T(0), T(1));
+		return T(2) * std::acos(d);
+	}
+
 	NDCE Matrix4<T> ToMatrix4(const Quaternion<T>& q) const noexcept
 	{
 		T xx = q.x * q.x;
@@ -85,7 +96,7 @@ public:
 	}
 
 	// 軸と角度から四元数を生成する関数
-	[[nodiscard]] Quaternion<T> FromAxisAngle(const Vector4<T>& axis, T angle) const noexcept
+	NDCE Quaternion<T> FromAxisAngle(const Vector4<T>& axis, T angle) const noexcept
 	{
 		T halfAngle = angle * T(0.5);
 		T sin = std::sin(halfAngle);
@@ -153,14 +164,14 @@ public:
 		return FromMatrix(m);
 	}
 
-	[[nodiscard]] Quaternion<T> Lerp(const Quaternion<T>& q1, const Quaternion<T>& q2, T t) const noexcept
+	NDCE Quaternion<T> Lerp(const Quaternion<T>& q1, const Quaternion<T>& q2, T t) const noexcept
 	{
 		return ( q1 * ( T(1) - t ) + q2 * t ).Normalized();
 	}
 
 	[[nodiscard]] Quaternion<T> Slerp(const Quaternion<T>& q1, const Quaternion<T>& q2, T t) const noexcept
 	{
-		T dot = v::VDot(q1, q2);
+		T dot = Dot(q1, q2);
 
 		if(dot < 0)
 		{
@@ -171,6 +182,34 @@ public:
 		// 4000倍のイプシロンを使って、dotが1に近いかどうかを判定する
 		// float の場合、: 1.0 - (epsilon * 4000) = 0.9995
 		T threshold = T(1) - (std::numeric_limits<T>::epsilon() * T(4000));
+
+		if(dot > threshold)
+		{
+			return Lerp(q1, q2, t);
+		}
+
+		T theta0 = std::acos(dot);
+		T theta = theta0 * t;
+		T sinTheta0 = std::sin(theta0);
+		T sinTheta = std::sin(theta);
+
+		T s0 = std::cos(theta) - dot * sinTheta / sinTheta0;
+		T s1 = sinTheta / sinTheta0;
+
+		return ( q1 * s0 ) + ( q2 * s1 );
 	}
+
+	[[nodiscard]] Quaternion<T> RotateTowards(const Quaternion<T>& q1, const Quaternion<T>& q2, T maxAngle) const noexcept
+	{
+		T angle = Angle(q1, q2);
+		if(angle < std::numeric_limits<T>::epsilon())
+		{
+			return q2;
+		}
+
+		T t = std::min(T(1), maxAngle / angle);
+		return Slerp(q1, q2, t);
+	}
+	
 };
 
