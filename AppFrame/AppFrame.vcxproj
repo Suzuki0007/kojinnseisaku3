@@ -357,8 +357,6 @@
     </ClCompile>
     <ClCompile Include="source\Manager\animationmanager.cpp" />
     <ClCompile Include="source\Manager\timemanager.cpp" />
-    <ClCompile Include="source\math\quaternion.cpp" />
-    <ClCompile Include="source\math\quaternionmatvec.cpp" />
     <ClCompile Include="source\Mode\ModeBase.cpp" />
     <ClCompile Include="source\Mode\ModeServer.cpp" />
     <ClCompile Include="source\pch.cpp">

@@ -1,4 +1,5 @@
 ﻿#pragma once
+#include "pch.h"
 
 template<std::floating_point T>
 class Quaternion
@@ -9,7 +10,7 @@ public:
 	T z{};
 	T w{ 1 };
 
-	cosntexpr Quaternion() noexcept = default;
+	constexpr Quaternion() noexcept = default;
 
 	constexpr Quaternion(T x, T y, T z, T w) noexcept
 		: x(x), y(y), z(z), w(w)
@@ -113,4 +114,4 @@ public:
 
 };
 
-using Quat = Quaternion<float>;
+using Quate = Quaternion<float>;

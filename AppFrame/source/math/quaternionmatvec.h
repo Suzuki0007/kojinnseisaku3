@@ -46,7 +46,7 @@ public:
 
 	// 四元数を行列から生成する関数
 
-	[[nodiscard]] Quaternion FromMatrix(const Matrix4<T>& m) const noexcept
+	[[nodiscard]] Quaternion<T> FromMatrix(const Matrix4<T>& m) const noexcept
 	{
 		Quaternion<T> q{};
 
@@ -55,13 +55,13 @@ public:
 		if(trace > 0)
 		{
 			T s = std::sqrt(trace + T(1)) * T(2);// s = 2w * 2 = 4w
-			return 
+			return
 			{
 				( m[2, 1] - m[1, 2] ) / s ,
 				( m[0, 2] - m[2, 0] ) / s ,
 				( m[1, 0] - m[0, 1] ) / s ,
-				s* T(0.25)// 0.25は元の値に戻すために必要
-			}
+				s * T(0.25)// 0.25は元の値に戻すために必要
+			};
 		}
 
 		int i = 0;
@@ -171,7 +171,9 @@ public:
 
 	[[nodiscard]] Quaternion<T> Slerp(const Quaternion<T>& q1, const Quaternion<T>& q2, T t) const noexcept
 	{
-		T dot = Dot(q1, q2);
+		Quaternion<T> q = q1;
+
+		T dot = Dot(q, q2);
 
 		if(dot < 0)
 		{
@@ -207,7 +209,7 @@ public:
 			return q2;
 		}
 
-		T t = std::min(T(1), maxAngle / angle);
+		T t = std::clamp(maxAngle / angle, T{}, T(1));
 		return Slerp(q1, q2, t);
 	}
 	

@@ -68,6 +68,6 @@ namespace VC
 
 	inline Vec4 ConvWorldPosToScreenPos(const Vec4& worldPos)
 	{
-		return ConvWorldPosToScreenPos(VecToDxLib(worldPos));
+		return DxLibToVec(ConvWorldPosToScreenPos(VecToDxLib(worldPos)));
 	}
 }

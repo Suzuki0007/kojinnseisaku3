@@ -44,8 +44,6 @@ std::optional<float> NearTargetScreenStrategy::ComputeScore
 	{
 		return std::nullopt;
 	}
-
-	float 
 }
 
 

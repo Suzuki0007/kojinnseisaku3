@@ -17,3 +17,4 @@
 #include "Handle/safehandle.h"
 #include "animation/animationclip.h"
 #include "manager/animationmanager.h"
+#include "math/quaternionmatvec.h"
