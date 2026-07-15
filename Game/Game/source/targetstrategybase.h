@@ -12,6 +12,7 @@ public:
 		const TargetContext& context
 	) const override final;
 
+	
 protected:
 	
 	// 対象のキャラクターリストからスコアを計算し、最も高いスコアのキャラクターを選択する

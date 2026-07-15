@@ -22,6 +22,19 @@ std::vector<TargetInfo> TargetStrategyBase::CollectCandidate
 			context.selfPos
 		);
 
+		if(distance > _maxDistance)
+		{
+			continue;
+		}
 
+		auto score = ComputeScore(target, context, distance);
+
+		if(!score.has_value())
+		{
+			continue;
+		}
+
+		result.emplace_back(std::move(*score));
 	}
+	return result;
 }

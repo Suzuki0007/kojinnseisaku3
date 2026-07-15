@@ -9,6 +9,8 @@ bool Camera::Initialize()
 	_clip_near = 2.0f;
 	_clip_far = 10000.0f;
 
+	SetupCamera_Perspective(_fovY);
+
 	// 初期状態の角度と距離を計算
 	float sx = _v_pos.x - _v_target.x;
 	float sz = _v_pos.z - _v_target.z;
@@ -18,6 +20,28 @@ bool Camera::Initialize()
 	_height_offset = _v_pos.y - _v_target.y; // カメラ高さと注視点の差を保持
 
 	return true;
+}
+
+Vec4 Camera::GetForward() const
+{
+	Vec4 dir = v::VSub(_v_target, _v_pos);
+	return v::VNorm(dir);
+}
+
+Vec4 Camera::GetToTarget(const Vec4& targetPos) const
+{
+	Vec4 dir = v::VSub(targetPos, _v_pos);
+	return v::VNorm(dir);
+}
+
+Vec4 Camera::GetRight() const
+{
+	return v::VNorm(v::VCross(GetForward(), Vec4::UnitY()));
+}
+
+Vec4 Camera::GetUp() const
+{
+	return v::VNorm(v::VCross(GetRight(), GetForward()));
 }
 
 bool Camera::Process()

@@ -13,11 +13,11 @@ public:
 	explicit NearTargetScreenStrategy(float maxDistance = dist::MAX_DISTANCE);
 
 protected:
-	std::optional<float> ComputeScore
+	std::optional<TargetInfo> ComputeScore
 	(
 		CharaBase* target,	// 対象のキャラクターリスト
-		const Vec4& selfPos,					// 自身の位置(今回はplayerの位置)
-		Camera* camera
+		const TargetContext& context,
+		float distance
 	) const override;
 };
 
@@ -29,11 +29,11 @@ public:
 	explicit NearTargetStrategy(float maxDistance = dist::MAX_DISTANCE);
 
 protected:
-	std::optional<float> ComputeScore
+	std::optional<TargetInfo> ComputeScore
 	(
 		CharaBase* target,	// 対象のキャラクターリスト
-		const Vec4& selfPos,					// 自身の位置(今回はplayerの位置)
-		Camera* camera
+		const TargetContext& context,
+		float distance
 	) const override;
 
 };
