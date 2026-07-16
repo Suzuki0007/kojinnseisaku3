@@ -12,7 +12,6 @@ struct TargetInfo
 	float angle { 0.0f };			// 角度
 	float distance { 0.0f };		// 距離
 	float side { 0.0f };			// 左右の位置関係
-
 };
 
 struct TargetContext

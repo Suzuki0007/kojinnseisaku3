@@ -3,6 +3,8 @@
 #include "player.h"
 #include "cube.h"
 #include "map.h"
+#include "enemytargetprovider.h"
+#include "neartargetstrategy.h"
 
 // オブジェクトの初期化
 // オブジェクトの初期化
@@ -26,10 +28,19 @@ bool ModeGame::ObjectInitialize()
 	pm->CreatePlayer("Player");
 	pm->CreatePlayer("Player2");
 	pm->CreatePlayer("Player3");
+
 	for(auto& player : pm->GetPlayer())
 	{
 		player->Initialize();
 		_chara.emplace_back(player.get());
+
+		auto* targetComponent = player->AddComponent<TargetComponent>
+			(
+				std::make_unique<NearTargetScreenStrategy>(),
+				std::make_unique<EnemyTargetProvider>()
+			);
+
+		player->SetTargetComponent(targetComponent);
 	}
 
 	// 敵初期化

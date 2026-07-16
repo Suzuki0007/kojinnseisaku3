@@ -16,6 +16,8 @@ PadInput::PadInput()
 
 	m_PadMap[std::to_underlying(InputButton::SceneDebug)] = 5;// RBボタン
 	m_PadMap[std::to_underlying(InputButton::Decide)] = 0;// Aボタン
+	m_PadMap[std::to_underlying(InputButton::RightTarget)] = 6;// RTボタン
+	m_PadMap[std::to_underlying(InputButton::LeftTarget)] = 7;// LTボタン
 }
 
 void PadInput::Update()
@@ -114,6 +116,8 @@ void PadInput::Update()
 		m_PadStatus[135] = 0;// ハットスイッチが右に倒されていなかったら0にする
 	}
 
+	_rightStickX = static_cast< float >( di.Rx ) / 1000.0f;// 右スティックのX軸の値を取得
+	_rightStickY = static_cast< float >( di.Ry ) / 1000.0f;// 右スティックのY軸の値を取得
 }
 
 bool PadInput::IsPress(InputButton button) const

@@ -38,8 +38,10 @@
     <ClInclude Include="source\enemybase.h" />
     <ClInclude Include="source\enemyfactory.h" />
     <ClInclude Include="source\enemymanager.h" />
+    <ClInclude Include="source\enemytargetprovider.h" />
     <ClInclude Include="source\gameobserver.h" />
     <ClInclude Include="source\healthcomponent.h" />
+    <ClInclude Include="source\targetprovider.h" />
     <ClInclude Include="source\jumpcomponet.h" />
     <ClInclude Include="source\luabase.h" />
     <ClInclude Include="source\lua_cmd.h" />
@@ -69,6 +71,7 @@
     <ClInclude Include="source\skyspherecomponent.h" />
     <ClInclude Include="source\speedcomponent.h" />
     <ClInclude Include="source\statemanager.h" />
+    <ClInclude Include="source\targetcomponent.h" />
     <ClInclude Include="source\targetstrategy.h" />
     <ClInclude Include="source\targetstrategybase.h" />
     <ClInclude Include="source\tolua_cmd\luaglue_cmd.h" />
@@ -91,6 +94,7 @@
     <ClCompile Include="source\enemybase.cpp" />
     <ClCompile Include="source\enemyfactory.cpp" />
     <ClCompile Include="source\enemymanager.cpp" />
+    <ClCompile Include="source\enemytargetprovider.cpp" />
     <ClCompile Include="source\gameobserver.cpp" />
     <ClCompile Include="source\healthcomponent.cpp" />
     <ClCompile Include="source\jumpcomponet.cpp" />
@@ -123,6 +127,7 @@
     <ClCompile Include="source\shadowmapcomponent.cpp" />
     <ClCompile Include="source\skyspherecomponent.cpp" />
     <ClCompile Include="source\statemanager.cpp" />
+    <ClCompile Include="source\targetcomponent.cpp" />
     <ClCompile Include="source\targetstrategybase.cpp" />
     <ClCompile Include="source\tolua_cmd\luaglue_cmd.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>

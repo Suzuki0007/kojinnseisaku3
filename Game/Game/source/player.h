@@ -2,7 +2,7 @@
 
 #include "playerbase.h"
 #include "camera.h"
-
+#include "targetcomponent.h"
 
 class Player : public PlayerBase
 {
@@ -47,9 +47,13 @@ public:
 	void CheckActionInput(int trg, const Vec4& v);
 	void ExcecuteMovement(const Vec4& v, CharaBase::STATUS oldStatus);
 	void ChangeAnim(CharaBase::STATUS next);
+
+	void Targeting(InputDevice& input);
+
 protected:
 	Camera* _cam;
-	
+
+
 	bool _is_dashing;// ダッシュ中かどうか
 	float _dash_speed;
 	float _dash_time;

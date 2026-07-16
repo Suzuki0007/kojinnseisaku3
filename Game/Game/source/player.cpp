@@ -395,6 +395,31 @@ void Player::ExcecuteMovement(const Vec4& v, CharaBase::STATUS oldStatus)
 	}
 }
 
+void Player::Targeting(InputDevice& input)
+{
+	if(_targetComponent)
+	{
+		_targetComponent->SetCamera(_cam);
+		_targetComponent->RefreshCandidate();
+
+		if(!_targetComponent->HasTarget())
+		{
+			_targetComponent->AcquireTarget();
+
+		}
+
+		if(input.IsTrigger(InputButton::LeftTarget))
+		{
+			_targetComponent->CycleTarget(TargetComponent::CycleDirection::Left);
+		}
+
+		if(input.IsTrigger(InputButton::RightTarget))
+		{
+			_targetComponent->CycleTarget(TargetComponent::CycleDirection::Right);
+		}
+	}
+}
+
 void Player::ChangeAnim(CharaBase::STATUS next)
 {
 	if(next == _status)
@@ -527,6 +552,8 @@ bool Player::Process()
 		UpdateBattle();
 	}
 
+	Targeting(input);
+
 	ChangeAnim(old_status);
 	
 	return true;
@@ -543,6 +570,11 @@ bool Player::Render()
 	}
 
 	AnimationRender(_handle, _pos, _dir);
+
+	if(_targetComponent)
+	{
+		_targetComponent->Render();
+	}
 
     return true;
 

@@ -13,6 +13,9 @@ enum class InputButton
 	CommandLeft,
 	CommandRight,
 
+	RightTarget,
+	LeftTarget,
+
 	Decide,
 
 	SceneDebug,

@@ -18,6 +18,9 @@ KeyboardInput::KeyboardInput()
 	m_KeyMap[std::to_underlying(InputButton::Decide)] = KEY_INPUT_SPACE;
 
 	m_KeyMap[std::to_underlying(InputButton::SceneDebug)] = KEY_INPUT_RETURN;
+
+	m_KeyMap[std::to_underlying(InputButton::RightTarget)] = KEY_INPUT_Q;
+	m_KeyMap[std::to_underlying(InputButton::LeftTarget)] = KEY_INPUT_W;
 }
 
 void KeyboardInput::Update()
