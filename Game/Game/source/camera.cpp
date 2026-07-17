@@ -84,6 +84,53 @@ bool Camera::Process()
 	return true;
 }
 
+void Camera::DrawDebugFov(float length) const
+{
+	Vec4 forward = GetForward();
+	float halfFov = _fovY * 0.5f;
+
+	// forwardをY軸中心に±halfFovだけ回転させて、画角の左右境界ベクトルを作る
+	auto rotateY = [](const Vec4& v, float rad)
+		{
+			float c = std::cos(rad);
+			float s = std::sin(rad);
+			return v::VGet
+			(
+				v.x * c + v.z * s,
+				v.y,
+				-v.x * s + v.z * c
+			);
+		};
+
+	Vec4 leftDir = rotateY(forward, -halfFov);
+	Vec4 rightDir = rotateY(forward, halfFov);
+
+	Vec4 leftEnd = v::VAdd(_v_pos, v::VScale(leftDir, length));
+	Vec4 rightEnd = v::VAdd(_v_pos, v::VScale(rightDir, length));
+	Vec4 centerEnd = v::VAdd(_v_pos, v::VScale(forward, length));
+
+	constexpr int segments = 16; // 弧を何分割するか
+	unsigned int colorEdge = GetColor(0, 255, 0);   // 緑: 画角の境界線
+	unsigned int colorCenter = GetColor(0, 255, 0); // 黄: 中心線(forward)
+
+	VC::DrawLine3D(_v_pos, leftEnd, colorEdge);
+	VC::DrawLine3D(_v_pos, rightEnd, colorEdge);
+	VC::DrawLine3D(_v_pos, centerEnd, colorCenter);
+
+	Vec4 prevPoint = leftEnd;
+	for(int i = 1; i <= segments; ++i)
+	{
+		float t = static_cast<float>(i) / static_cast<float>(segments);
+		float rad = -halfFov + (halfFov * 2.0f) * t; // -halfFov 〜 +halfFov まで均等に分割
+
+		Vec4 dir = rotateY(forward, rad);
+		Vec4 point = v::VAdd(_v_pos, v::VScale(dir, length));
+
+		VC::DrawLine3D(prevPoint, point, colorEdge);
+		prevPoint = point;
+	}
+}
+
 bool Camera::Render()
 {
 	/*int x = 0, y = 0, size = 16;

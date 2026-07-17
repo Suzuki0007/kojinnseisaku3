@@ -3,7 +3,7 @@
 
 namespace dist
 {
-	static constexpr float MAX_DISTANCE = 3000.0f; // 最大距離
+	static constexpr float MAX_DISTANCE = 500.0f; // 最大距離
 }
 
 // 画面中央に近いターゲットを選択する戦略

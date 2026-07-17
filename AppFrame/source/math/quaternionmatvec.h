@@ -177,7 +177,7 @@ public:
 
 		if(dot < 0)
 		{
-			q1 = q1 * T(-1);
+			q = q * T(-1);
 			dot = -dot;
 		}
 
@@ -187,7 +187,7 @@ public:
 
 		if(dot > threshold)
 		{
-			return Lerp(q1, q2, t);
+			return Lerp(q, q2, t);
 		}
 
 		T theta0 = std::acos(dot);
@@ -198,7 +198,7 @@ public:
 		T s0 = std::cos(theta) - dot * sinTheta / sinTheta0;
 		T s1 = sinTheta / sinTheta0;
 
-		return ( q1 * s0 ) + ( q2 * s1 );
+		return ( q * s0 ) + ( q2 * s1 );
 	}
 
 	[[nodiscard]] Quaternion<T> RotateTowards(const Quaternion<T>& q1, const Quaternion<T>& q2, T maxAngle) const noexcept
@@ -215,3 +215,4 @@ public:
 	
 };
 
+using QuateMatVec = QuaternionMatVec<float>;

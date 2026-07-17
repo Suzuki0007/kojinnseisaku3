@@ -67,6 +67,8 @@ bool TargetComponent::CycleTarget(CycleDirection dir)
 		return false;
 	}
 
+	//RefreshCandidate();
+
 	auto targets = _provider->GetTargets();
 
 	if(targets.empty())
@@ -149,6 +151,35 @@ bool TargetComponent::CycleTarget(CycleDirection dir)
 	_target = bestTarget->target;
 
 	return true;
+}
+
+Vec4 TargetComponent::FaceTarget(const Vec4& currentDir, float t) const
+{
+	if(!_target || !_owner)
+	{
+		return currentDir;
+	}
+
+	Vec4 toTarget = v::VSub(_target->GetPos(), _owner->GetPos());
+	toTarget.y = 0.0f;
+	
+	if(toTarget.Length() < target::K_MIN_DISTANCE)
+	{
+		return currentDir;
+	}
+	toTarget = toTarget.Normalized();
+
+	QuateMatVec qmv;
+
+	Vec4 up = Vec4::UnitY();
+
+	Quate qFrom = qmv.LookRotation(currentDir, up); // 現在の向きを作成
+	Quate qTo = qmv.LookRotation(toTarget, up); // 目標の向きを作成
+	Quate qResult = qmv.Slerp(qFrom, qTo, t); // 補間
+
+	Vec4 baseForward = Vec4::UnitZ(); // 基準の前方向ベクトル
+
+	return qmv.Rotate(qResult, baseForward);// 補間後の向きベクトルを返す
 }
 
 void TargetComponent::RefreshCandidate()

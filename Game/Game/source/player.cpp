@@ -575,6 +575,10 @@ bool Player::Render()
 	{
 		_targetComponent->Render();
 	}
+	if(_cam)
+	{
+		_cam->DrawDebugFov();
+	}
 
     return true;
 

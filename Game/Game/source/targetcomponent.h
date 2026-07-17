@@ -3,6 +3,11 @@
 #include "targetstrategy.h"
 #include "targetprovider.h"
 
+namespace target
+{
+	constexpr float K_MIN_DISTANCE = 0.0001f; // 最小距離
+}
+
 class TargetComponent : public Component<CharaBase>
 {
 public:
@@ -35,6 +40,8 @@ public:
 
 	// ターゲット候補の更新
 	void RefreshCandidate();
+
+	Vec4 FaceTarget(const Vec4& currentDir, float t) const;
 
 	CharaBase* GetTarget() const { return _target; }
 	bool HasTarget() const { return _target != nullptr; }

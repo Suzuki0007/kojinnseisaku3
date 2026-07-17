@@ -18,7 +18,7 @@ public:
 	}
 
 	// 単位四元数の生成
-	[[nodiscard]] constexpr Quaternion Identity() noexcept
+	[[nodiscard]] static constexpr Quaternion Identity() noexcept
 	{
 		return { 0, 0, 0, 1 };
 	}

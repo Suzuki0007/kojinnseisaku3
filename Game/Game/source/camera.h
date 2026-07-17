@@ -24,6 +24,8 @@ public:
 	Vec4 GetRight() const;
 	Vec4 GetUp() const;
 
+	void DrawDebugFov(float length = 500.0f) const;
+
 	Vec4 _v_pos;
 	Vec4 _v_target;
 	float _clip_near;

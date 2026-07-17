@@ -32,6 +32,13 @@ std::optional<TargetInfo> NearTargetScreenStrategy::ComputeScore
 
 	float angle = std::acos(dot); // ラジアンで角度を計算
 
+	float halfFov = context.camera->GetFovY() * 0.5f; // カメラの半分の視野角を取得
+
+	if(angle > halfFov)
+	{
+		return std::nullopt; // ターゲットが視野外の場合はスコアを計算しない
+	}
+
 	Vec4 right = forward.Cross(Vec4::UnitY()).Normalized();// カメラの右方向ベクトル
 
 	float side = right.Dot(toTarget); // 右方向に対する位置関係を計算
