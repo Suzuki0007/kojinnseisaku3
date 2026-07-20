@@ -264,6 +264,11 @@ void Player::CheckActionInput(int trg, const Vec4& v)
 		// 地上にいる場合、または空中で未使用の場合のみ攻撃可能
 		if(_status != STATUS::ATTACK)
 		{
+			if(_targetComponent && _targetComponent->HasTarget())
+			{
+				_dir = _targetComponent->FaceTarget(_dir, 1.0f); // ターゲットの方向を向く)
+			}
+
 			// 地上にいる場合は常に攻撃可能
 			if(_jump->IsGround())
 			{
@@ -285,21 +290,50 @@ void Player::ExcecuteMovement(const Vec4& v, CharaBase::STATUS oldStatus)
 {
 	if(_status == STATUS::ATTACK)
 	{
-		// 攻撃時の前進（省略せず既存処理）
-		if(_play_time < _total_time * 0.5f)
+		if(_targetComponent && _targetComponent->HasTarget())
 		{
-			float attack_move_speed;
-			if(_jump->IsGround())
+			CharaBase* target = _targetComponent->GetTarget();
+
+			if(target && target->IsAlive())
 			{
-				attack_move_speed = 5.0f;
+				Vec4 toTarget = v::VSub(target->GetPos(), _pos);
+				toTarget.y = 0.0f;
+
+				float dist = v::VSize(toTarget);
+
+				constexpr float APPROACH_RANGE = 100.0f; // 近づく距離の閾値
+
+				// 攻撃時の前進（省略せず既存処理）
+				if(_play_time < _total_time * 0.5f && dist > APPROACH_RANGE)
+				{
+					Vec4 moveDir = v::VNorm(toTarget);
+
+					float attack_move_speed;
+					if(_jump->IsGround())
+					{
+						attack_move_speed = 5.0f;
+					}
+					else
+					{
+						attack_move_speed = 8.0f;
+					}
+					
+					float moveAmount = min::MyMin(dist - APPROACH_RANGE, attack_move_speed);
+
+					_pos.x += moveDir.x * moveAmount;
+					_pos.z += moveDir.z * moveAmount;
+				}
 			}
 			else
 			{
-				attack_move_speed = 8.0f;
+				if(_play_time < _total_time * 0.5f)
+				{
+					float attack_move_speed = _jump->IsGround() ? 5.0f : 8.0f;
+					Vec4 forward_dir = v::VNorm(_dir);
+					_pos.x += forward_dir.x * attack_move_speed;
+					_pos.z += forward_dir.z * attack_move_speed;
+				}
 			}
-			Vec4 forward_dir = v::VNorm(_dir);
-			_pos.x += forward_dir.x * attack_move_speed;
-			_pos.z += forward_dir.z * attack_move_speed;
 		}
 
 		// 空中で攻撃している場合は重力を適用

@@ -94,4 +94,38 @@ namespace mymath
 
 		return dist2 <= radius * radius;
 	}
+
+}
+
+
+namespace min
+{
+	template <typename T>
+	constexpr T MyMin(const T& a, const T& b)
+	{
+		if(a < b)
+		{
+			return a;
+		}
+		else
+		{
+			return b;
+		}
+	}
+}
+
+namespace max
+{
+	template <typename T>
+	constexpr T MyMax(const T& a, const T& b)
+	{
+		if(a > b)
+		{
+			return a;
+		}
+		else
+		{
+			return b;
+		}
+	}
 }
