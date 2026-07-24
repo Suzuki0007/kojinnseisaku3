@@ -93,6 +93,7 @@ public:
 	void NotifyLand();// 着地したことを通知する
 	bool GetLand() const;
 	void SetLand(bool land);
+	bool IsAscending() const;
 
 protected:
 	int _attach_index;

@@ -239,28 +239,31 @@ bool ModeGame::CharaToCubeCollision(CharaBase* chara, Cube* cube)
 
 	if(_d_use_collision && _resolve_on_y && _landed_on_up)
 	{
-		// プレイヤーが「空中攻撃中」であれば即時に着地フラグを立てない（アニメーションが上書きされるのを防ぐ）
-		bool suppressLand = false;
-		if(player != nullptr)
+		// プレイヤーが「空中攻撃中」であれば即時に着地フラグを立てない
+		if(!player->IsAscending())
 		{
-			// プレイヤーが攻撃ステータスかつ現在は空中扱い（GetLand() == false）なら抑止
-			if(player->GetStatus() == CharaBase::STATUS::ATTACK && !player->GetLand())
+			bool suppressLand = false;
+			if(player != nullptr)
 			{
-				suppressLand = true;
+				// プレイヤーが攻撃ステータスかつ現在は空中扱い（GetLand() == false）なら抑止
+				if(player->GetStatus() == CharaBase::STATUS::ATTACK && !player->GetLand())
+				{
+					suppressLand = true;
+				}
 			}
-		}
 
-		// 位置はキューブ上に合わせるが、攻撃中なら着地フラグは次フレーム以降に任せる
-		Vec4 tmpPos = chara->GetPos();
-		float y_offset = 0.0f;  // 必要なら調整
-		tmpPos.y = box.max.y + y_offset;
-		chara->SetPos(tmpPos);
+			// 位置はキューブ上に合わせるが、攻撃中なら着地フラグは次フレーム以降に任せる
+			Vec4 tmpPos = chara->GetPos();
+			float y_offset = 0.0f;  // 必要なら調整
+			tmpPos.y = box.max.y + y_offset;
+			chara->SetPos(tmpPos);
 
-		if(!suppressLand)
-		{
-			player->SetLand(true);
+			if(!suppressLand)
+			{
+				player->SetLand(true);
+			}
+			return true;
 		}
-		return true;
 	}
 
 	if(_d_use_collision)
@@ -324,7 +327,7 @@ bool ModeGame::LandCheck()
 		if(!is_ground)
 		{
 			Vec4 start = v::VAdd(pos, v::VGet(0.0f, 0.0f, 0.0f));
-			Vec4 end = v::VAdd(pos, v::VGet(0.0f, -50.0f, 0.0f));
+			Vec4 end = v::VAdd(pos, v::VGet(0.0f, -100.0f, 0.0f));
 
 			MV1_COLL_RESULT_POLY hitpoly;
 			hitpoly = VC::MV1CollCheckLine(
@@ -349,6 +352,7 @@ bool ModeGame::LandCheck()
 		if(!is_ground)
 		{
 			player->SetLand(false);
+			_landed_on_up = false;
 		}
 	}
 	return false;

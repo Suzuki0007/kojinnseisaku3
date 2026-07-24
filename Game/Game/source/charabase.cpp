@@ -80,6 +80,15 @@ void CharaBase::SetLand(bool land)
 	}
 }
 
+bool CharaBase::IsAscending() const
+{
+	if(_jump)
+	{
+		return !_jump->IsGround() && _jump->GetCurrentGravity() > 0.0f;
+	}
+	return false;
+}
+
 // 計算処理
 bool CharaBase::Process()
 {
