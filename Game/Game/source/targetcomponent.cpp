@@ -161,7 +161,7 @@ Vec4 TargetComponent::FaceTarget(const Vec4& currentDir, float t) const
 	}
 
 	Vec4 toTarget = v::VSub(_target->GetPos(), _owner->GetPos());
-	toTarget.y = 0.0f;
+	//toTarget.y = 0.0f;
 	
 	if(toTarget.Length() < target::K_MIN_DISTANCE)
 	{

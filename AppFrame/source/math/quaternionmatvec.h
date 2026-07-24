@@ -88,7 +88,7 @@ public:
 	}
 
 	// 四元数を使ってベクトルを回転させる関数
-	[[nodiscard]] constexpr Vector4<T> Rotate(const Quaternion<T>& q, const Vector4<T>& v) const noexcept
+	[[nodiscard]] static constexpr Vector4<T> Rotate(const Quaternion<T>& q, const Vector4<T>& v) noexcept
 	{
 		Vector4<T> qv{ q.x, q.y, q.z, 0 };
 		Vector4<T> t = qv.Cross(v) * T(2);
@@ -96,7 +96,7 @@ public:
 	}
 
 	// 軸と角度から四元数を生成する関数
-	NDCE Quaternion<T> FromAxisAngle(const Vector4<T>& axis, T angle) const noexcept
+	NDCE Quaternion<T> static FromAxisAngle(const Vector4<T>& axis, T angle) noexcept
 	{
 		T halfAngle = angle * T(0.5);
 		T sin = std::sin(halfAngle);
@@ -148,15 +148,16 @@ public:
 	[[nodiscard]] Quaternion<T> LookRotation(const Vector4<T>& forward, const Vector4<T>& up) const noexcept
 	{
 		Vector4<T> f = forward.Normalized();
-		Vector4<T> r = up.Cross(f).Normalized();	// 右方向ベクトル
-		Vector4<T> u = f.Cross(r);					// 上方向ベクトル
+		Vector4<T> r = up.Cross(f).Normalized();   // 右方向ベクトル
+		Vector4<T> u = f.Cross(r);                 // 上方向ベクトル
 
-		Matrix4<T> m
+		Matrix4<T> m{};
+		m.m =
 		{
 			{
-				{ r.x, u.y, f.z, 0 }, // 右方向ベクトル
-				{ u.x, u.y, u.z, 0 }, // 上方向ベクトル
-				{ f.x, f.y, f.z, 0 }, // 前方向ベクトル
+				{ r.x, u.x, f.x, 0 }, // 右方向ベクトル
+				{ r.y, u.y, f.y, 0 }, // 上方向ベクトル
+				{ r.z, u.z, f.z, 0 }, // 前方向ベクトル
 				{ 0,   0,   0,   1 }
 			}
 		};

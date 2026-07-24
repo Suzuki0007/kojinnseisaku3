@@ -9,6 +9,9 @@ public:
 	bool IsPress(InputButton button) const override { return false; }
 	bool IsTrigger(InputButton button) const override { return false; }
 	bool IsRelease(InputButton button) const override { return false; }
+
+	float GetRightStickX() const override { return 0.0f; }
+	float GetRightStickY() const override { return 0.0f; }
 };
 
 // 入力デバイスのロケータークラス

@@ -70,5 +70,6 @@ protected:
 
 	bool _is_attack;			// 攻撃中かどうか
 	bool _air_attack_used;		// 空中攻撃を使用したかどうか
+	bool _pendingAttack;		// 攻撃を保留中かどうか
 };
 

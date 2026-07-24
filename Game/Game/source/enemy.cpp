@@ -22,7 +22,7 @@ bool Enemy::Initialize()
 	_collision_r = 30.0f;
 	_collision_weight = 10.0f;
 
-	_hp = 20;
+	_hp = 10;
 
 	_battleSpeed = 12.0f;
 	_speed->SetSpeed(_battleSpeed);
@@ -121,6 +121,12 @@ bool Enemy::Process()
 bool Enemy::Render()
 {
 	base::Render();
+
+	if(!_is_alive)
+	{
+		return true; // 描画スキップ。falseを返すとエラー扱いになる設計もあるのでtrueが無難
+	}
+
     // 再生時間をセット
     if(_attach_index != -1)
     {

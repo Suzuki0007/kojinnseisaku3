@@ -21,6 +21,8 @@ KeyboardInput::KeyboardInput()
 
 	m_KeyMap[std::to_underlying(InputButton::RightTarget)] = KEY_INPUT_Q;
 	m_KeyMap[std::to_underlying(InputButton::LeftTarget)] = KEY_INPUT_W;
+
+	m_KeyMap[std::to_underlying(InputButton::Menu)] = KEY_INPUT_ESCAPE;
 }
 
 void KeyboardInput::Update()

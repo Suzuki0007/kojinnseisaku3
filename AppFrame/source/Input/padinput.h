@@ -19,8 +19,8 @@ public:
 	virtual bool IsTrigger(InputButton button) const override;
 	virtual bool IsRelease(InputButton button) const override;
 
-	float GetRightStickX() const { return _rightStickX; }
-	float GetRightStickY() const { return _rightStickY; }
+	float GetRightStickX() const override { return _rightStickX; }
+	float GetRightStickY() const override { return _rightStickY; }
 
 private:
 	// 通常ボタン128個、スティック4方向、ハットスイッチ4方向の合計140個の状態を保存する配列

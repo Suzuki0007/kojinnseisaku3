@@ -19,6 +19,7 @@ enum class InputButton
 	Decide,
 
 	SceneDebug,
+	Menu,
 
 	Max
 };
@@ -35,4 +36,7 @@ public:
 	virtual bool IsPress(InputButton button) const = 0;
 	virtual bool IsTrigger(InputButton button) const = 0;
 	virtual bool IsRelease(InputButton button) const = 0;
+
+	virtual float GetRightStickX() const = 0;
+	virtual float GetRightStickY() const = 0;
 };

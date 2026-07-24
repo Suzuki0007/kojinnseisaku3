@@ -15,6 +15,9 @@ public:
 	virtual bool IsTrigger(InputButton button) const override;
 	virtual bool IsRelease(InputButton button) const override;
 
+	virtual float GetRightStickX() const override { return 0.0f; }
+	virtual float GetRightStickY() const override { return 0.0f; }
+
 private:
 	std::array<char, 256> m_KeyStatus {};// キーの状態を保存する配列
 	std::array<char, 256> m_KeyStatusOld {};// 前フレームのキーの状態を保存する配列

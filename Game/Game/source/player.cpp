@@ -266,20 +266,20 @@ void Player::CheckActionInput(int trg, const Vec4& v)
 		{
 			if(_targetComponent && _targetComponent->HasTarget())
 			{
-				_dir = _targetComponent->FaceTarget(_dir, 1.0f); // ターゲットの方向を向く)
+				_dir = _targetComponent->FaceTarget(_dir); // ターゲットの方向を向く)
 			}
 
 			// 地上にいる場合は常に攻撃可能
 			if(_jump->IsGround())
 			{
 				_status = STATUS::ATTACK;
-				Attack();
+				_pendingAttack = true; // 攻撃を保留
 			}
 			// 空中にいて、まだ空中攻撃を使っていない場合のみ攻撃可能
 			else if(!_air_attack_used)
 			{
 				_status = STATUS::ATTACK;
-				Attack();
+				_pendingAttack = true; // 攻撃を保留
 				_air_attack_used = true; // 空中攻撃を使用した
 			}
 		}
@@ -297,21 +297,23 @@ void Player::ExcecuteMovement(const Vec4& v, CharaBase::STATUS oldStatus)
 			if(target && target->IsAlive())
 			{
 				Vec4 toTarget = v::VSub(target->GetPos(), _pos);
-				toTarget.y = 0.0f;
+				//toTarget.y = 0.0f;
 
 				float dist = v::VSize(toTarget);
 
-				constexpr float APPROACH_RANGE = 100.0f; // 近づく距離の閾値
+				constexpr float APPROACH_RANGE = 0.0f; // 近づく距離の閾値
+				constexpr float APPROACH_EPSILON = 1.0f; // 近づく距離の許容誤差
 
-				// 攻撃時の前進（省略せず既存処理）
-				if(_play_time < _total_time * 0.5f && dist > APPROACH_RANGE)
+				// 攻撃時の前進
+				if(dist > APPROACH_RANGE + APPROACH_EPSILON)
 				{
 					Vec4 moveDir = v::VNorm(toTarget);
+					float heightDiff = target->GetPos().y - _pos.y;
 
 					float attack_move_speed;
 					if(_jump->IsGround())
 					{
-						attack_move_speed = 5.0f;
+						attack_move_speed = 10.0f;
 					}
 					else
 					{
@@ -321,32 +323,43 @@ void Player::ExcecuteMovement(const Vec4& v, CharaBase::STATUS oldStatus)
 					float moveAmount = min::MyMin(dist - APPROACH_RANGE, attack_move_speed);
 
 					_pos.x += moveDir.x * moveAmount;
+					_pos.y += moveDir.y * moveAmount;
 					_pos.z += moveDir.z * moveAmount;
+				}
+				else
+				{
+					if(_pendingAttack)
+					{
+						// 攻撃を実行
+						Attack();
+						_pendingAttack = false; // 攻撃保留を解除
+					}
+					_status = STATUS::WAIT;
 				}
 			}
 			else
 			{
 				if(_play_time < _total_time * 0.5f)
 				{
-					float attack_move_speed = _jump->IsGround() ? 5.0f : 8.0f;
+					float attack_move_speed;
+					if(_jump->IsGround())
+					{
+						attack_move_speed = 5.0f;
+					}
+					else
+					{
+						attack_move_speed = 8.0f;
+					}
+
 					Vec4 forward_dir = v::VNorm(_dir);
 					_pos.x += forward_dir.x * attack_move_speed;
 					_pos.z += forward_dir.z * attack_move_speed;
 				}
 			}
 		}
-
-		// 空中で攻撃している場合は重力を適用
-		if(!_jump->IsGround())
+		else
 		{
-			_pos.y += _jump->GetCurrentGravity();
-
-			if(_pos.y <= 0.0f)
-			{
-				_pos.y = 0.0f;
-				_jump->SetGround(true);
-				_air_attack_used = false;
-			}
+			_status = STATUS::WAIT;
 		}
 	}
 	else if(_jump->IsJumping())
@@ -420,9 +433,17 @@ void Player::ExcecuteMovement(const Vec4& v, CharaBase::STATUS oldStatus)
 			else
 			{
 				_status = STATUS::WAIT;
-				if(oldStatus == STATUS::FALL || oldStatus == STATUS::LANDING)
+				if(oldStatus == STATUS::FALL)
 				{
 					_status = STATUS::LANDING;
+				}
+				else if(oldStatus == STATUS::LANDING && _play_time < _total_time)
+				{
+					_status = STATUS::LANDING; // まだ再生中なら継続
+				}
+				else
+				{
+					_status = STATUS::WAIT; // 再生終了後は待機状態に戻す
 				}
 			}
 		}
@@ -531,7 +552,7 @@ void Player::ChangeAnim(CharaBase::STATUS next)
 		}
 	}
 
-	if(_play_time >= _total_time)
+	if(_play_time >= _total_time && _status != STATUS::LANDING)
 	{
 		_play_time = 0.0f;
 	}
@@ -567,10 +588,13 @@ bool Player::Process()
 	_oldPos = _pos;
 	_oldDir = _dir;
 
-	_jump->Update(1.0f);
-
 	// 処理前のステータスを保存しておく
 	CharaBase::STATUS old_status = _status;
+
+	if(_status != STATUS::ATTACK)
+	{
+		_jump->Update(1.0f);
+	}
 
 	Vec4 moveVector = v::VGet(0.0f, 0.0f, 0.0f);
 

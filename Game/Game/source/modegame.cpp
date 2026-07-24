@@ -371,7 +371,7 @@ bool ModeGame::Process()
 		_camera->Process();
 	}
 
-
+	DebugProcess();
 
 	return true;
 }

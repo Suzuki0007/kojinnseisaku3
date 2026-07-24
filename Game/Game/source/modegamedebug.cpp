@@ -18,8 +18,10 @@ bool ModeGame::DebugProcess()
 {
 	int key = ApplicationMain::GetInstance()->GetKey();
 	int trg = ApplicationMain::GetInstance()->GetTrg();
+
+	InputDevice& input = InputLocator::Get();
 	// ESCキーでメニューを開く
-	if(trg & PAD_INPUT_9)
+	if(input.IsTrigger(InputButton::Menu))
 	{
 		ModeMenu* modemenu = new ModeMenu();
 		// ModeGameより上のレイヤーにメニューを登録する

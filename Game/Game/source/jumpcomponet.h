@@ -4,7 +4,7 @@
 namespace jump
 {
 	static constexpr float GRAVITY = 0.98f; // 重力
-	static constexpr float JUMP_HEIGHT = 15.0f; // ジャンプの高さ
+	static constexpr float JUMP_HEIGHT = 20.0f; // ジャンプの高さ
 	static constexpr int MAX_JUMP_COUNT = 2; // ジャンプの最大回数
 }
 

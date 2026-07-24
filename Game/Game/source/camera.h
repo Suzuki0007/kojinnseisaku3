@@ -2,6 +2,10 @@
 #include "appframe.h"
 #include "applicationmain.h"
 
+namespace pitch
+{
+	static constexpr float PITCH = 0.3f;
+}
 
 class Camera
 {
@@ -24,7 +28,7 @@ public:
 	Vec4 GetRight() const;
 	Vec4 GetUp() const;
 
-	void DrawDebugFov(float length = 500.0f) const;
+	void DrawDebugFov(float length = 3000.0f) const;
 
 	Vec4 _v_pos;
 	Vec4 _v_target;
@@ -37,6 +41,7 @@ protected:
 	float _angle;    // カメラの水平角度（ラジアン）
 	float _dist;     // ターゲットとの距離
 	float _height_y; // ターゲットの注視点の高さ
-    float _height_offset; // 注視点とカメラ高さの差
+	float _pitch{ 0.3f };    // カメラの上下角度（ラジアン）
+	float _horizontalDist{ 0.0f }; // カメラとターゲットの水平距離
 };
 
