@@ -1,6 +1,12 @@
 ﻿#include "pch.h"
 #include "animationmanager.h"
 
+namespace
+{
+	static constexpr int Random = 100; // 乱数
+	static constexpr float Decimalize = 100.0f; // 乱数の小数化
+}
+
 AnimationManager::AnimationManager()
 {
 	_nextId = 1;
@@ -21,7 +27,7 @@ bool AnimationManager::Terminate()
 	return true;
 }
 
-int AnimationManager::Play(int handle, const std::string_view& name, bool loop, float speed)
+int AnimationManager::Play(int handle, const std::string_view& name, bool loop, float speed, float speedVariance)
 {
 	if(handle == -1)
 	{
@@ -48,7 +54,7 @@ int AnimationManager::Play(int handle, const std::string_view& name, bool loop, 
 		return -1;
 	}
 
-	return CreateInstance(handle, attachIndex, name, total, loop, speed);
+	return CreateInstance(handle, attachIndex, name, total, loop, speed, speedVariance);
 
 }
 
@@ -113,6 +119,11 @@ void AnimationManager::Update(float time)
 
 		instance.playTime += time * instance.speed;
 
+		if(instance.speedVariance > 0.0f)
+		{
+			instance.playTime += static_cast<float>( rand() % Random ) / Decimalize * instance.speedVariance;;
+		}
+
 		if(instance.totalTime > 0.0f && instance.playTime >= instance.totalTime)
 		{
 			if(instance.loop)
@@ -120,7 +131,7 @@ void AnimationManager::Update(float time)
 				instance.playTime = std::fmod(instance.playTime, instance.totalTime);
 				if(instance.playTime < 0.0f)
 				{
-					instance.playTime += instance.totalTime; // ⭕ 修正：playing への誤代入を直す
+					instance.playTime += instance.totalTime;
 				}
 			}
 			else
@@ -203,7 +214,7 @@ bool AnimationManager::IsPlaying(int id) const
 	return it->second.playing;
 }
 
-int AnimationManager::CreateInstance(int handle, int attachindex, const std::string_view& name, float totaltime, bool loop, float speed)
+int AnimationManager::CreateInstance(int handle, int attachindex, const std::string_view& name, float totaltime, bool loop, float speed, float speedVariance)
 {
 	Instance instance;
 	instance.id = _nextId++;
@@ -213,6 +224,7 @@ int AnimationManager::CreateInstance(int handle, int attachindex, const std::str
 	instance.totalTime = totaltime;
 	instance.playTime = 0.0f;
 	instance.speed = speed;
+	instance.speedVariance = speedVariance;
 	instance.loop = loop;
 	instance.playing = true;
 	_animInstance[instance.id] = instance;

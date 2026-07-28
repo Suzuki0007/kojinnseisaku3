@@ -19,7 +19,9 @@ public:
 
 	virtual void SetCamera(Camera* cam) { _cam = cam; }
 
-	const handle::ModelHandle& GetModelHandle() {return _mHandle;}
+	const handle::ModelHandle& GetModelHandle() {return _handle;}
+
+	int GetHandle() const { return _handle; }
 
 protected:
 	Camera* _cam;

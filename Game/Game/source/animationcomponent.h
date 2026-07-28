@@ -21,7 +21,7 @@ public:
 		std::to_underlying(Anim::COUNT)>& animation
 	);
 
-	void ChangeAnimation(Anim anim);
+	void ChangeAnimation(Anim anim, bool forceRestart = false);
 	bool IsAnimationEnd() const;
 	float GetAnimPlayTime() const;
 	float GetAnimTotalTime() const;

@@ -480,8 +480,8 @@ bool ModeGame::UpdateCheckAttackCollision()
 				Mat4 frame_world = MC::MMult(frame_local, model_world);
 
 				// 剣の根元と先端のローカル座標
-				Vec4 local_under_pos = v::VGet(50.0f, 50.0f, -100.0f);
-				Vec4 local_over_pos = v::VGet(50.0f, 50.0f, -100.0f);
+				Vec4 local_under_pos = v::VGet(50.0f, 0.0f, 0.0f);
+				Vec4 local_over_pos = v::VGet(50.0f, 0.0f, 0.0f);
 
 				// ワールド座標に変換
 				attack.capsule.underpos = v::VTransform(local_under_pos, frame_world);

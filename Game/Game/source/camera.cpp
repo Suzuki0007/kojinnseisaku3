@@ -79,8 +79,8 @@ bool Camera::Process()
 	float ry = input.GetRightStickY();
 
 	// 1. 右スティックによるカメラ角度の変更（カメラクラスの責務）
-	if(rx < -analogMin) { _angle -= rotateSpeed; } // 左回転
-	if(rx > analogMin) { _angle += rotateSpeed; } // 右回転
+	if(rx < -analogMin) { _angle += rotateSpeed; } // 左回転
+	if(rx > analogMin) { _angle -= rotateSpeed; } // 右回転
 
 	if(ry > analogMin) { _pitch -= pitchSpeed; } // 下方向
 	if(ry < -analogMin) { _pitch += pitchSpeed; } // 上方向

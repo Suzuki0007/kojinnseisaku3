@@ -22,31 +22,49 @@ bool AnimationComponent::Terminate()
 	return true;
 }
 
-void AnimationComponent::ChangeAnimation(Anim anim)
+void AnimationComponent::ChangeAnimation(Anim anim, bool forceRestart)
 {
+	// すでに同じアニメーションが再生中で、強制的に再生しない場合は何もしない
+	if(!forceRestart && _currentAnim == anim && _animId.has_value())
+	{
+		return;
+	}
+	
+	// すでにアニメーションが再生中の場合は停止する
 	if(_animId.has_value())
 	{
 		AnimationManager::GetInstance()->Stop(*_animId);
 		_animId.reset();
 	}
 
-	auto& clip = _animation[std::to_underlying(anim)];
+	_currentAnim = anim;
 
+	auto& clip = _animation[std::to_underlying(anim)]; // アニメーションを取得
+
+	// アニメーション名が空の場合は何もしない
 	if(clip.GetName().empty())
 	{
 		return;
 	}
 
 	int id = AnimationManager::GetInstance()->Play(
-		_owner->GetModelHandle(),
+		_owner->GetHandle(),
 		clip.GetName(),
 		clip.IsLoop(),
-		clip.GetSpeed()
+		clip.GetSpeed(),
+		clip.GetSpeedVariance()
 	);
 
 	if(id != -1)
 	{
 		_animId = id;
+
+		// 再生開始オフセットが設定されている場合は、ランダムにオフセットを設定する
+		if(clip.GetStartOffsetMax() > 0)
+		{
+			float offset = static_cast<float>(rand() % clip.GetStartOffsetMax());
+			AnimationManager::GetInstance()->SetTime(id, offset);
+		}
 	}
 }
 
@@ -92,8 +110,8 @@ void AnimationComponent::Update(float deltaTime)
 
 	if(status != _currentAnim)
 	{
-		_currentAnim = status;
-		ChangeAnimation(_currentAnim);
+		//_currentAnim = status;
+		ChangeAnimation(status, false);
 	}
 }
 

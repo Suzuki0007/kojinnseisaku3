@@ -19,9 +19,9 @@ bool Player::Initialize()
 	_handle = Load::LoadModel(path::Player("Player"));
 	// ステータスを「無し」に設定
 	_status = STATUS::NONE;
-	_attach_index = -1;
-	_total_time = 0.0f;
-	_play_time = 0.0f;
+	//_attach_index = -1;
+	//_total_time = 0.0f;
+	//_play_time = 0.0f;
 	// 位置、向きの初期化
 	_pos = v::VGet(0.0f, 0.0f, 0.0f); // 初期位置が同じだが、押し出され処理のおかげで位置がずれる
 	_dir = v::VGet(0.0f, 0.0f, -1.0f);// キャラモデルはデフォルトで-Z方向を向いている
@@ -53,21 +53,22 @@ bool Player::Initialize()
 	_speed->SetSpeed(_battleSpeed);
 	_charaId = 1;
 
-	//_anim = AddComponent<AnimationComponent>();
-	//_anim->SetAnimation(
-		//{
-		//	AnimationClip(""),	// NONE
-		//	AnimationClip("mot_attack_charge_loop"),	// WAIT
-		//	AnimationClip("mot_move_run"),				// WALK
-		//	AnimationClip("mot_move_jump_f_start", false),	// JUMP
-		//	AnimationClip("mot_move_jump_f_downloop"),	// FALL
-		//	AnimationClip("mot_attack_nomal", false, 2.0f),		// ATTACK
-		//	AnimationClip("mot_move_land", false),	// LANDING
-		//	AnimationClip("mot_attack_charge_step", false),	// DASHING
-		//	AnimationClip("mot_move_jump_f_uploop", false),	// ROLLING
-		//});
+	_anim = AddComponent<AnimationComponent>();
+	_anim->SetAnimation(
+		{
+			AnimationClip(""),                                          // NONE
+			//AnimtionClip(アニメーション名, ループするか, 再生速度, 再生速度のばらつき, 開始オフセットの最大値)
+			AnimationClip("mot_attack_charge_loop", true, 1.0f, 0.1f, 30), // WAIT
+			AnimationClip("mot_move_run"),                              // WALK
+			AnimationClip("mot_move_jump_f_start", false, 0.4f),              // JUMP
+			AnimationClip("mot_move_jump_f_downloop"),                  // FALL
+			AnimationClip("mot_attack_nomal", false, 2.0f),             // ATTACK
+			AnimationClip("mot_move_land", false),                      // LANDING
+			AnimationClip("mot_attack_charge_step", false),             // DASHING
+			AnimationClip("mot_move_jump_f_uploop", false),             // ROLLING
+		});
 
-	//_anim->ChangeAnimation(AnimationComponent::Anim::WAIT);
+	_anim->ChangeAnimation(AnimationComponent::Anim::WAIT);
 
 	return true;
 }
@@ -88,7 +89,7 @@ bool Player::Attack()
 		v::VGet(0.0f, 0.0f, 0.0f),		// カプセルの上位置(剣の先端)
 		80.0f,						// 半径
 		10,							// 発生までの時間
-		10,							// 有効時間
+		100,							// 有効時間
 		0,							// カプセルの伸縮速度
 		true,						// カプセルがキャラに追従するか
 		10.0f,						// ダメージ量
@@ -283,6 +284,11 @@ void Player::CheckActionInput(int trg, const Vec4& v)
 				_air_attack_used = true; // 空中攻撃を使用した
 			}
 		}
+		else
+		{
+			_pendingAttack = true; // 攻撃を保留
+			_anim->ChangeAnimation(AnimationComponent::Anim::ATTACK, true); // 強制的に頭から再生
+		}
 	}
 }
 
@@ -302,7 +308,7 @@ void Player::ExcecuteMovement(const Vec4& v, CharaBase::STATUS oldStatus)
 				float dist = v::VSize(toTarget);
 
 				constexpr float APPROACH_RANGE = 0.0f; // 近づく距離の閾値
-				constexpr float APPROACH_EPSILON = 1.0f; // 近づく距離の許容誤差
+				constexpr float APPROACH_EPSILON = 30.0f; // 近づく距離の許容誤差
 
 				// 攻撃時の前進
 				if(dist > APPROACH_RANGE + APPROACH_EPSILON)
@@ -339,7 +345,7 @@ void Player::ExcecuteMovement(const Vec4& v, CharaBase::STATUS oldStatus)
 			}
 			else
 			{
-				if(_play_time < _total_time * 0.5f)
+				if(_anim->GetAnimPlayTime() < _anim->GetAnimTotalTime() * 0.5f)
 				{
 					float attack_move_speed;
 					if(_jump->IsGround())
@@ -437,7 +443,7 @@ void Player::ExcecuteMovement(const Vec4& v, CharaBase::STATUS oldStatus)
 				{
 					_status = STATUS::LANDING;
 				}
-				else if(oldStatus == STATUS::LANDING && _play_time < _total_time)
+				else if(oldStatus == STATUS::LANDING && !_anim->IsAnimationEnd())
 				{
 					_status = STATUS::LANDING; // まだ再生中なら継続
 				}
@@ -567,7 +573,7 @@ void Player::UpdateBattle()
 
 	if(_status == STATUS::ATTACK)
 	{
-		if(_play_time >= _total_time)
+		if(_anim->IsAnimationEnd())
 		{
 			_status = STATUS::WAIT;
 		}
@@ -612,7 +618,8 @@ bool Player::Process()
 
 	Targeting(input);
 
-	ChangeAnim(old_status);
+	//ChangeAnim(old_status);
+	_anim->Update(1.0f);
 	
 	return true;
 }
@@ -622,10 +629,10 @@ bool Player::Render()
 {
     base::Render();
 
-	if(_attach_index != -1)
-	{
-		MV1SetAttachAnimTime(_handle, _attach_index, _play_time);
-	}
+	//if(_attach_index != -1)
+	//{
+	//	MV1SetAttachAnimTime(_handle, _attach_index, _play_time);
+	//}
 
 	AnimationRender(_handle, _pos, _dir);
 
@@ -637,6 +644,8 @@ bool Player::Render()
 	{
 		_cam->DrawDebugFov();
 	}
+
+	DrawFormatString(10, 10, GetColor(255, 255, 255), "Player Pos: (%.2f, %.2f, %.2f)", _pos.x, _pos.y, _pos.z);
 
     return true;
 
