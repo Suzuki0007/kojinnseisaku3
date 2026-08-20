@@ -211,6 +211,7 @@
     <ClInclude Include="source\lua\tolua_src\tolua.h" />
     <ClInclude Include="source\lua\tolua_src\tolua_event.h" />
     <ClInclude Include="source\Manager\animationmanager.h" />
+    <ClInclude Include="source\Manager\effekseermanager.h" />
     <ClInclude Include="source\Manager\timemanager.h" />
     <ClInclude Include="source\math\matrix4.h" />
     <ClInclude Include="source\math\matrix4convert.h" />
@@ -226,6 +227,14 @@
     <ClInclude Include="source\Resource\resourcefacade.h" />
     <ClInclude Include="source\Resource\resourceserver.h" />
     <ClInclude Include="source\singleton.h" />
+    <ClInclude Include="source\Sound\sounditembase.h" />
+    <ClInclude Include="source\Sound\sounditembgm.h" />
+    <ClInclude Include="source\Sound\sounditemoneshot.h" />
+    <ClInclude Include="source\Sound\sounditemse.h" />
+    <ClInclude Include="source\Sound\sounditemstatic.h" />
+    <ClInclude Include="source\Sound\sounditemstream.h" />
+    <ClInclude Include="source\Sound\sounditemvoice.h" />
+    <ClInclude Include="source\Sound\soundserver.h" />
     <ClInclude Include="source\state\statemachine.h" />
   </ItemGroup>
   <ItemGroup>
@@ -356,12 +365,19 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="source\Manager\animationmanager.cpp" />
+    <ClCompile Include="source\Manager\effekseermanager.cpp" />
     <ClCompile Include="source\Manager\timemanager.cpp" />
     <ClCompile Include="source\Mode\ModeBase.cpp" />
     <ClCompile Include="source\Mode\ModeServer.cpp" />
     <ClCompile Include="source\pch.cpp">
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Create</PrecompiledHeader>
     </ClCompile>
+    <ClCompile Include="source\Sound\sounditembase.cpp" />
+    <ClCompile Include="source\Sound\soundserver.cpp" />
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

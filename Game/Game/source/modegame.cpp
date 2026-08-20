@@ -287,6 +287,8 @@ bool ModeGame::Process()
 	float deltaTime = 1.0f; // 1フレームの時間を秒単位で計算
 	AnimationManager::GetInstance()->Update(deltaTime);
 
+	EffekseerManager::GetInstance()->Update();
+
 	int trg = ApplicationMain::GetInstance()->GetTrg();
 	if(_is_gameover)
 	{

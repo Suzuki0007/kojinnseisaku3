@@ -1,0 +1,72 @@
+﻿/*********************************************************************/
+// * \file   sounditembase.h
+// * \brief  サウンドベースクラス
+// *
+// * \author 鈴木裕稀
+/*********************************************************************/
+
+#pragma once
+#include "pch.h"
+
+namespace soundserver
+{
+	class SoundServer;
+}
+
+namespace soundserver
+{
+	class SoundItemBase
+	{
+	public:
+		enum class TYPE
+		{
+			BGM = 0,		// ストリーミング再生。ループ再生
+			SE,				// 1回のみ再生
+			VOICE,			// ストリーミング再生。ループ再生しない
+			ONESHOT,		// ストリーミング再生。1回のみ再生。即時再生し、停止したらサーバから削除される
+		};
+		static const int FLG_3D = 0x0001;			// 3Dサウンドとして再生する
+		static const int FLG_LOOP = 0x0002;			// ループ再生する
+
+		SoundItemBase(std::string filename, int flg);
+		virtual ~SoundItemBase();
+
+		void SetSoundServer(soundserver::SoundServer* soundserver) { _soundServer = soundserver; }
+
+		virtual void Unload();										// サウンドのアンロード
+		virtual bool IsLoad();										// サウンドがロードされているか？
+		virtual void Play() = 0;									// サウンドの再生
+		virtual bool IsPlay();										// サウンドが再生中か？
+		virtual void Stop();										// サウンドの停止
+
+		virtual int GetVolume() { return _iVolume; }				// ボリューム取得
+		virtual int GetPan() { return _iPan; }						// パン取得
+		virtual int GetFrequency() { return _iFrequency; }			// 周波数取得
+		virtual void SetVolume(int volume);							// ボリューム設定
+		virtual void SetPan(int pan);								// パン設定
+		virtual void SetFrequency(int frequency);					// 周波数設定
+		virtual void ResetFrequency();								// 周波数リセット
+
+		virtual TYPE GetType() = 0;									// サウンドタイプ取得
+		virtual std::string GetFileName() { return _sFileName; }	// ファイル名取得
+		virtual int GetSoundHandle() { return _iSoundHandle; }		// サウンドハンドル取得
+
+		virtual void Update() {};									// サウンドの更新
+
+	protected:
+		virtual void  PlayMem(int flat);							// メモリからサウンド再生
+		virtual int LoadMem(std::string filename);					// メモリからサウンドロード
+
+
+		int	_iSoundHandle;							// サウンドハンドル
+		std::string _sFileName;						// ファイル名
+		int	_iFlag;									// フラグ
+		int	_iVolume;								// ボリューム
+		int	_iPan;									// パン
+		int _iFrequency;							// 周波数
+		soundserver::SoundServer* _soundServer;		// サウンドサーバー
+	};
+}
+
+
+

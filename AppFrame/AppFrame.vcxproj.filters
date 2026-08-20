@@ -40,6 +40,12 @@
     <Filter Include="ソース ファイル\lua\tolua">
       <UniqueIdentifier>{a6e43c1e-0ed3-4d73-924c-84cb9c5d2411}</UniqueIdentifier>
     </Filter>
+    <Filter Include="ソース ファイル\エフェクシアマネージャー">
+      <UniqueIdentifier>{b2173800-cc49-4acb-b4cf-ef18c322e051}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="ヘッダー ファイル\エフェクシアマネージャー">
+      <UniqueIdentifier>{c0ee04a7-06e6-472f-bdbd-86c287dcef4a}</UniqueIdentifier>
+    </Filter>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\Application\winmain.cpp">
@@ -194,6 +200,15 @@
     </ClCompile>
     <ClCompile Include="source\animation\animationclip.cpp">
       <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Sound\soundserver.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Sound\sounditembase.cpp">
+      <Filter>ソース ファイル</Filter>
+    </ClCompile>
+    <ClCompile Include="source\Manager\effekseermanager.cpp">
+      <Filter>ソース ファイル\エフェクシアマネージャー</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -383,5 +398,38 @@
     <ClInclude Include="source\math\quaternionmatvec.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
+    <ClInclude Include="source\Sound\sounditembase.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Sound\sounditembgm.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Sound\sounditemoneshot.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Sound\sounditemse.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Sound\sounditemstatic.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Sound\sounditemstream.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Sound\sounditemvoice.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Sound\soundserver.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\Manager\effekseermanager.h">
+      <Filter>ヘッダー ファイル\エフェクシアマネージャー</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="ClassDiagram.cd" />
+    <None Include="ClassDiagram1.cd">
+      <Filter>ソース ファイル</Filter>
+    </None>
   </ItemGroup>
 </Project>
