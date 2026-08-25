@@ -44,6 +44,10 @@
     <ClInclude Include="source\enemytargetprovider.h" />
     <ClInclude Include="source\gameobserver.h" />
     <ClInclude Include="source\healthcomponent.h" />
+    <ClInclude Include="source\kickeffect.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="source\targetprovider.h" />
     <ClInclude Include="source\jumpcomponet.h" />
     <ClInclude Include="source\luabase.h" />
@@ -104,6 +108,10 @@
     <ClCompile Include="source\gameobserver.cpp" />
     <ClCompile Include="source\healthcomponent.cpp" />
     <ClCompile Include="source\jumpcomponet.cpp" />
+    <ClCompile Include="source\kickeffect.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="source\luabase.cpp" />
     <ClCompile Include="source\lua_cmd.cpp" />
     <ClCompile Include="source\map.cpp" />

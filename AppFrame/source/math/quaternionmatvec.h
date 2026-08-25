@@ -3,6 +3,12 @@
 #include "matrix4.h"
 #include "vector4.h"
 
+namespace quate
+{
+	template<std::floating_point T>
+	static constexpr T PARALLEL_THRESHOLD = T(0.99);// 2つの四元数が平行であるとみなすための閾値
+}
+
 template<std::floating_point T>
 class QuaternionMatVec
 {
@@ -148,7 +154,27 @@ public:
 	[[nodiscard]] Quaternion<T> LookRotation(const Vector4<T>& forward, const Vector4<T>& up) const noexcept
 	{
 		Vector4<T> f = forward.Normalized();
-		Vector4<T> r = up.Cross(f).Normalized();   // 右方向ベクトル
+		Vector4<T> safeUp = up;
+
+		// 前方向ベクトルと上方向ベクトルが平行である場合、右方向ベクトルを計算できないため、上方向ベクトルを補正する
+		if(std::abs(f.Dot(up.Normalized())) > quate::PARALLEL_THRESHOLD<T>)
+		{
+			Vector4<T> fallBackUp;// 代替の上方向ベクトルを用意する
+
+			// 前方向ベクトルのy成分が大きい場合、x軸方向のベクトルを代替の上方向ベクトルとして使用する
+			if(std::abs(f.y) > quate::PARALLEL_THRESHOLD<T>)
+			{
+				fallBackUp = Vec4::UnitX();
+			}
+			else
+			{
+				fallBackUp = Vec4::UnitY();
+			}
+
+			safeUp = fallBackUp; // 上方向ベクトルを補正する
+		}
+
+		Vector4<T> r = safeUp.Cross(f).Normalized();   // 右方向ベクトル
 		Vector4<T> u = f.Cross(r);                 // 上方向ベクトル
 
 		Matrix4<T> m{};
@@ -212,6 +238,11 @@ public:
 
 		T t = std::clamp(maxAngle / angle, T{}, T(1));
 		return Slerp(q1, q2, t);
+	}
+
+	[[nodiscard]] constexpr Vector4<T> RotateVector(const Quaternion<T>& q, const Vector4<T>& v) const noexcept
+	{
+		return Rotate(q, v);
 	}
 	
 };

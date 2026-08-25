@@ -148,4 +148,21 @@ namespace clamp
 			return value;
 		}
 	}
+
+	template <typename T>
+	constexpr T MyClamp2(const T& value, const T& min = 0.0f, const T& max = 1.0f)
+	{
+		if(value < min)
+		{
+			return min;
+		}
+		else if(value > max)
+		{
+			return max;
+		}
+		else
+		{
+			return value;
+		}
+	}
 }
