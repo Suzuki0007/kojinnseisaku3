@@ -1,0 +1,95 @@
+[33mcommit c596b14989b5baf6942465470c27f5930cc65f79[m[33m ([m[1;36mHEAD[m[33m -> [m[1;32mmain[m[33m, [m[1;31morigin/main[m[33m, [m[1;31morigin/HEAD[m[33m)[m
+Author: yuuki0007 <125cr0007@tokyo.amg.ac.jp>
+Date:   Tue Aug 25 13:05:54 2026 +0900
+
+    キックエフェクトの導入(未完成)
+
+[33mcommit 9ff74ee82db3cda55f8365110286d06b34e39ff7[m
+Author: yuuki0007 <125cr0007@tokyo.amg.ac.jp>
+Date:   Thu Aug 20 13:41:24 2026 +0900
+
+    えふぇくとのマネージャーなどのエフェクト関連追加とサウンド追加
+
+[33mcommit b37e3e2ea04ac13fc209d9a05c863740627973f4[m
+Author: yuuki0007 <125cr0007@tokyo.amg.ac.jp>
+Date:   Wed Aug 19 12:39:14 2026 +0900
+
+    攻撃のコンポーネント、ダッシュのコンポーネント、ドッジロールのコンポーネントを追加
+
+[33mcommit fb12e24420e8206dda05e3d1fecd7e16c8aac20f[m
+Author: yuuki0007 <125cr0007@tokyo.amg.ac.jp>
+Date:   Tue Jul 28 12:40:40 2026 +0900
+
+    アニメーションマネージャーを追加し、再生スピードを修正
+
+[33mcommit 9850a729ebef82677ea35ad94ecb76f6e31d09f5[m
+Author: yuuki0007 <125cr0007@tokyo.amg.ac.jp>
+Date:   Fri Jul 24 19:00:57 2026 +0900
+
+    cubeの上に乗ったらジャンプできなかったので修正追加
+
+[33mcommit a29090ebe600a4476c4260511ab68b4e3090f2e5[m
+Author: yuuki0007 <125cr0007@tokyo.amg.ac.jp>
+Date:   Fri Jul 24 18:21:03 2026 +0900
+
+    カメラの上下を追加し、0の位置にカメラが行ったら止まるように追加
+
+[33mcommit 2c2c6b085e69196070fb60719076d3c821fbb73b[m
+Author: yuukisuzuki <125cr0007@tokyo.amg.ac.jp>
+Date:   Tue Jul 21 01:33:58 2026 +0900
+
+    ターゲットして座標に移動する処理追加(未検証)
+
+[33mcommit ed6337a0fb564e7ed7e4a0c2c08f2ceb065053bb[m
+Author: suzukiyuuki <125cr0007@tokyo.amg.ac.jp>
+Date:   Fri Jul 17 19:27:59 2026 +0900
+
+    カメラに内積を使って入っていたらターゲットする処理追加
+
+[33mcommit 0f522d3218ddc68419152c82e5c003717156c2c3[m
+Author: suzukiyuuki <125cr0007@tokyo.amg.ac.jp>
+Date:   Thu Jul 16 13:05:58 2026 +0900
+
+    ターゲットの完成をしたが画面外でも反応してしまうので修正中
+
+[33mcommit 056b616bdbc299af61b97815032a037e27c7c231[m
+Author: yuukisuzuki <125cr0007@tokyo.amg.ac.jp>
+Date:   Wed Jul 15 23:00:03 2026 +0900
+
+    ターゲットの修正とカメラに追加機能をした
+
+[33mcommit 9595b62637b0750f9e213cb1d6115049837d12fd[m
+Author: suzukiyuuki <125cr0007@tokyo.amg.ac.jp>
+Date:   Tue Jul 14 12:46:35 2026 +0900
+
+    ターゲットの続きを追加
+
+[33mcommit ebc89099adf54d46f741367ff037b61a737a0269[m
+Author: yuukisuzuki <125cr0007@tokyo.amg.ac.jp>
+Date:   Tue Jul 14 03:18:26 2026 +0900
+
+    クォータニオン追加
+
+[33mcommit 92a754e31352d53dc7779f52dae8e77000e528b0[m
+Author: suzukiyuuki <125cr0007@tokyo.amg.ac.jp>
+Date:   Mon Jul 13 20:53:38 2026 +0900
+
+    コミット忘れ
+
+[33mcommit 09dac70190a30b683af15de239bf80a5c61f0431[m
+Author: suzukiyuuki <125cr0007@tokyo.amg.ac.jp>
+Date:   Mon Jul 13 20:53:10 2026 +0900
+
+    クォータニオンの導入(未完成)
+
+[33mcommit 026346568f6cb5e81e7fc951fc6285ff4ab3f33c[m
+Author: suzukiyuuki <125cr0007@tokyo.amg.ac.jp>
+Date:   Mon Jul 13 15:58:46 2026 +0900
+
+    プロジェクトの移動とDotとCrossの追加、ターゲット用のstrategyを作成し、ITargetStrategyではSelectTargetを作りCharabase、pos、cameraを引数に入れ、TargetStrategyBaseではSelectTargetをoverrideしてそこで終わらせ、ComputerScoreでスコア計算をするようにした
+
+[33mcommit 20c7d7d07c1634f7135b42bfa8bd9b0ad5c7d1b1[m
+Author: Suzuki0007 <125cr0007@tokyo.amg.ac.jp>
+Date:   Tue Jul 7 09:21:15 2026 +0900
+
+    Initial commit

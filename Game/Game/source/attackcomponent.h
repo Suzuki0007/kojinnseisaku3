@@ -3,12 +3,22 @@
 
 namespace attack
 {
+	// 攻撃対象に近づく距離の閾値と許容誤差
 	constexpr float APPROACH_RANGE = 0.0f;      // 近づく距離の閾値
 	constexpr float APPROACH_EPSILON = 30.0f;   // 近づく距離の許容誤差
-	constexpr float GROUND_APPROACH_SPEED = 10.0f;
-	constexpr float AIR_APPROACH_SPEED = 8.0f;
-	constexpr float GROUND_FORWARD_SPEED = 5.0f;
-	constexpr float AIR_FORWARD_SPEED = 8.0f;
+	constexpr float GROUND_APPROACH_SPEED = 10.0f;// 攻撃対象に近づく速度
+	constexpr float AIR_APPROACH_SPEED = 8.0f;// 攻撃対象に近づく速度
+	constexpr float GROUND_FORWARD_SPEED = 5.0f;// 攻撃アニメーション中に前進する速度
+	constexpr float AIR_FORWARD_SPEED = 8.0f;// 攻撃アニメーション中に前進する速度
+	constexpr float FORWARD_MOVE_ANIM_RATIO = 0.5f; // 攻撃アニメーションの再生時間に対する前進する時間の割合
+
+	// 攻撃カプセルのパラメータ
+	constexpr Vec4 ATTACK_CAPSULE_UNDER_POS = v::VGet(0.0f, 0.0f, 0.0f); // 攻撃カプセルの下方向
+	constexpr Vec4 ATTACK_CAPSULE_OVER_POS = v::VGet(0.0f, 0.0f, 0.0f); // 攻撃カプセルの上方向
+	constexpr float ATTACK_CAPSULE_RADIUS = 80.0f; // 攻撃カプセルの半径
+	constexpr int ATTACK_CAPSULE_WAIT_TIME = 10; // 攻撃カプセルの待機時間
+	constexpr int ATTACK_CAPSULE_ACTIVE_TIME = 100; // 攻撃カプセルの有効時間
+	constexpr float ATTACK_CAPSULE_DAMAGE = 10.0f; // 攻撃カプセルのダメージ量
 }
 
 class AttackComponent final : public Component<CharaBase>
@@ -18,24 +28,33 @@ public:
 	using STA = CharaBase::STATUS;
 	AttackComponent() = delete;
 	virtual ~AttackComponent() = default;
-	
-	// 実際の攻撃カプセル生成処理を登録する
-	void SetAttacExecutor(std::move_only_function<void()> executor) { _attackExecutor = std::move(executor); } 
+
+	void SetUpAttackCapusule(int handle, std::vector<mymath::ATTACKCOLLISION>& attackCollisionList, std::string attackChara);
 
 	void Update(float deltaTime) override;
 
 	void RequestAttack(); // 攻撃要求を出す
 
-	float GetApproachSpeed() const;
-	float GetForwardSpeed() const;
+	float GetApproachSpeed() const;// 攻撃対象に近づく速度を取得する
+	float GetForwardSpeed() const;// 攻撃アニメーション中に前進する速度を取得する
 
 	void ResetAirAttack() { _airAttackUsed = false; }// 攻撃状態をリセットする
 
 	bool IsAttacking() const { return _owner->GetStatus() == STA::ATTACK; }
 
+	void SetAttackCapusuleParams(int handle, std::vector<mymath::ATTACKCOLLISION>& attackCollisionList, std::string charaName);
+
+
+
 private:
+	void ExecuteAttack(); // 攻撃カプセル生成処理を実行する
+
 	bool _pendingAttack{ false }; // 攻撃保留フラグ
 	bool _airAttackUsed{ false }; // 空中攻撃使用済みフラグ
-	std::move_only_function<void()> _attackExecutor { nullptr }; // 攻撃カプセル生成処理
+
+	int _handle{ -1 };
+	std::vector<mymath::ATTACKCOLLISION>* _attackCollisionList{ nullptr };
+	std::string _attackChara;
 };
+
 

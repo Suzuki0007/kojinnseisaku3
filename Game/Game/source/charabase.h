@@ -9,6 +9,9 @@
 
 class AnimationComponent;
 class JumpComponent;
+class RollComponent;
+class DashComponent;
+class TargetComponent;
 
 class CharaBase : public ObjectBase, public IComponentBindable<CharaBase>, public IBattleReceiver
 {
@@ -80,6 +83,9 @@ public:
 	}
 
 	AnimConfig& GetAnimConfig() { return _animConfig; }
+	auto GetTargetComponent() const { return _targetComponent; }
+	void SetTargetComponent(TargetComponent* targetComponent) { _targetComponent = targetComponent; }
+	auto GetAnimComponent() const { return _anim; }
 
 	virtual const char* GetCharaClassName() const = 0;
 
@@ -118,6 +124,9 @@ protected:
 
 	// ジャンプコンポーネントの所有権を持つ
 	std::unique_ptr<JumpComponent> _jump;
+	std::unique_ptr<RollComponent> _roll;
+	std::unique_ptr<DashComponent> _dash;
+	TargetComponent* _targetComponent{ nullptr };
 
 	AnimConfig _animConfig; // アニメーション名の設定
 	AnimationComponent* _anim;

@@ -1,8 +1,10 @@
 ﻿#pragma once
 #include "../singleton.h"
-#include "DxLib.h"
-#include <cstdint>
-#include <chrono>
+
+namespace timems
+{
+	static constexpr float MS = 1000.0f;// 経過時間を秒に変換して返すための定数
+}
 
 class TimeManager : public Singleton<TimeManager>
 {
@@ -20,9 +22,10 @@ public:
 	void Pause();
 	void Resume();
 	void Update();
-	void ResumeFrom(uint64_t targetElapsed);
+	void ResumeFrom(uint64_t targetElapsed);// 指定した経過時間から再開する関数
 	
 	uint64_t GetElapsedMs() const { return _elapsed; }// 経過時間を秒で取得する関数
+	float GetDeltaTime() const;
 
 	TimeState GetState() const { return _state; }
 
@@ -40,5 +43,6 @@ private:
 
 	MS _pausedAccum{ 0 };	// 一時停止していた時間の累積
 	uint64_t _elapsed{ 0 };	// 経過時間（ミリ秒）
+	uint64_t _deltaMs{ 0 };	// 前回のフレームからの経過時間（ミリ秒）
 };
 

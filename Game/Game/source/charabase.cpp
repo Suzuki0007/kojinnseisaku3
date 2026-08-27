@@ -2,9 +2,15 @@
 #include "charabase.h"
 #include "animationcomponent.h"
 #include "jumpcomponet.h"
+#include "targetcomponent.h"
+#include "rollcomponent.h"
+#include  "dashcomponent.h"
 
 CharaBase::CharaBase()
 	: _jump(std::make_unique<JumpComponent>(*this))
+	, _roll(std::make_unique<RollComponent>(*this))
+	, _dash(std::make_unique<DashComponent>(*this))
+	, _targetComponent(nullptr)
 {}
 
 CharaBase::~CharaBase()

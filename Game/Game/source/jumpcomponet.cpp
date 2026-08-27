@@ -55,7 +55,7 @@ void JumpComponent::Fall()
 
 	if(_currentGravity < 0.0f)
 	{
-		_owner->SetStatus(STA::FALL); // 落下のアニメーション
+		_owner->SetStatus(STA::FALL);
 	}
 }
 
@@ -64,7 +64,7 @@ void JumpComponent::Land()
 	_isGround = true; // 着地状態にする
 	_currentJumpCount = 0; // ジャンプ回数をリセットする
 	_currentGravity = 0.0f; // 重力をリセットする
-	_owner->SetStatus(STA::LANDING); // 着地のアニメーション
+	_owner->SetStatus(STA::LANDING);
 }
 
 void JumpComponent::SetGround(bool ground)

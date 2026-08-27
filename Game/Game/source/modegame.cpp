@@ -167,6 +167,8 @@ bool ModeGame::Initialize()
 	InputDevice& input = InputLocator::Get();
 	input.Update();
 
+	TimeManager::GetInstance()->Start();
+
 	return true;
 }
 
@@ -288,6 +290,8 @@ bool ModeGame::Process()
 	AnimationManager::GetInstance()->Update(deltaTime);
 
 	EffekseerManager::GetInstance()->Update();
+
+	TimeManager::GetInstance()->Update();
 
 	int trg = ApplicationMain::GetInstance()->GetTrg();
 	if(_is_gameover)

@@ -3,6 +3,7 @@
 #include "playerbase.h"
 #include "camera.h"
 #include "targetcomponent.h"
+#include "attackcomponent.h"
 
 class Player : public PlayerBase
 {
@@ -53,23 +54,8 @@ public:
 protected:
 	Camera* _cam;
 
-
-	bool _is_dashing;// ダッシュ中かどうか
-	float _dash_speed;
-	float _dash_time;
-	float _dash_timer;
-	Vec4 _dash_direction;
-
-	bool _is_rolling; 
-	float _roll_speed; 
-	float _roll_time; 
-	float _roll_timer;			// ドッジロール残り時間
-	Vec4 _roll_direction;		// ドッジロール方向
+	AttackComponent* _attack;
 
 	float _air_control;			// 空中制御係数
-
-	bool _is_attack;			// 攻撃中かどうか
-	bool _air_attack_used;		// 空中攻撃を使用したかどうか
-	bool _pendingAttack;		// 攻撃を保留中かどうか
 };
 

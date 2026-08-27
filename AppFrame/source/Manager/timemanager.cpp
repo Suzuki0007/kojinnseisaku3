@@ -52,7 +52,15 @@ void TimeManager::Update()
 	{
 		auto now = Clock::now();
 		auto totalDuration = (now - _startTime) - _pausedAccum;// タイマー開始から現在までの時間から一時停止していた時間を引いた値を計算
-		_elapsed = static_cast<uint64_t>(std::chrono::duration_cast<MS>(totalDuration).count());// 経過時間をミリ秒で更新
+		//　std::chrono::duration_cast<MS>(totalDuration).count()は、totalDurationをミリ秒単位に変換し、その値を整数型で返す
+		uint64_t newElapsed = static_cast< uint64_t >( std::chrono::duration_cast< MS >( totalDuration ).count() );// 経過時間をミリ秒で計算
+
+		_deltaMs = newElapsed - _elapsed;// 前回のフレームからの経過時間を計算
+		_elapsed = newElapsed;// 経過時間を更新
+	}
+	else
+	{
+		_deltaMs = 0;
 	}
 }
 
@@ -67,4 +75,9 @@ void TimeManager::ResumeFrom(uint64_t targetElapsed)
 	_pausedAccum = MS(0);// 一時停止時間の累積を0にリセット
 	_pauseStart = TimePoint();// 一時停止開始時間を初期化
 	_state = TimeState::Play;// タイマー状態を再生に設定
+}
+
+float TimeManager::GetDeltaTime() const
+{
+	return static_cast< float >( _deltaMs ) / timems::MS;// 経過時間を秒に変換して返す
 }

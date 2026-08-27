@@ -19,3 +19,4 @@
 #include "manager/animationmanager.h"
 #include "math/quaternionmatvec.h"
 #include "manager/effekseermanager.h"
+#include "Manager/timemanager.h"

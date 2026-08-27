@@ -30,6 +30,7 @@ public:
 	void SetDashTime(float time) { _dashTime = time; } // ダッシュ継続時間を設定する
 
 private:
+
 	// 入力ベクトルがゼロベクトルの場合は、fallbackDirを返す
 	Vec4 ResolveDashDirection(const Vec4& inputV, const Vec4& fallbackDir);
 

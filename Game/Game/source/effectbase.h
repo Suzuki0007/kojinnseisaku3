@@ -12,5 +12,7 @@ public:
 	virtual bool Process() override;
 	virtual bool Render() override;
 
+	virtual void  SetUp(const Vec4& startpos, const Vec4& dir, float distance);
+
 };
 

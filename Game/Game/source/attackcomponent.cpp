@@ -3,6 +3,38 @@
 #include "targetcomponent.h"
 #include "animationcomponent.h"
 
+void AttackComponent::SetUpAttackCapusule(int handle, std::vector<mymath::ATTACKCOLLISION>& attackCollisionList, std::string attackChara)
+{
+	_handle = handle;
+	_attackCollisionList = &attackCollisionList;
+	_attackChara = attackChara;
+}
+
+void AttackComponent::ExecuteAttack()
+{
+	if(!_attackCollisionList)
+	{
+		return;
+	}
+
+	mymath::ATTACKCOLLISION attackCollision;
+
+	attackCollision.capsule.underpos = attack::ATTACK_CAPSULE_UNDER_POS; // カプセルの下位置(剣の根元)
+	attackCollision.capsule.overpos = attack::ATTACK_CAPSULE_OVER_POS;  // カプセルの上位置(剣の先端)
+	attackCollision.capsule.r = attack::ATTACK_CAPSULE_RADIUS;
+	attackCollision.capsule.modelhandle = _handle;
+	attackCollision.capsule.framenum = MV1SearchFrame(_handle, "Character1_RightHandMiddle1"); // 右手中指先端に追従
+
+	attackCollision.waittime = attack::ATTACK_CAPSULE_WAIT_TIME;
+	attackCollision.activetime = attack::ATTACK_CAPSULE_ACTIVE_TIME;
+	attackCollision.damage = attack::ATTACK_CAPSULE_DAMAGE;
+	attackCollision.follow = true;
+	attackCollision.attackChara = _attackChara;
+	attackCollision.isHit = false;
+
+	_attackCollisionList->push_back(attackCollision);
+}
+
 void AttackComponent::Update(float deltaTime)
 {
 	if(_owner->GetStatus() != STA::ATTACK)
@@ -46,10 +78,7 @@ void AttackComponent::Update(float deltaTime)
 			//	攻撃対象がいない場合は待機状態に戻す
 			if(_pendingAttack)
 			{
-				if(_attackExecutor)
-				{
-					_attackExecutor();// 攻撃カプセル生成処理を実行
-				}
+				ExecuteAttack(); // 攻撃カプセル生成処理を実行
 				_pendingAttack = false; // 攻撃保留を解除
 			}
 			_owner->SetStatus(STA::WAIT);
@@ -57,10 +86,10 @@ void AttackComponent::Update(float deltaTime)
 	}
 	else
 	{
-		AnimationComponent* anim = _owner->GetAnim();
+		AnimationComponent* anim = _owner->GetAnimComponent();
 
 		// 攻撃対象がいない場合は攻撃アニメーションの再生中に前進する
-		if(anim && anim->GetAnimPlayTime() < anim->GetAnimTotalTime())
+		if(anim && anim->GetAnimPlayTime() < anim->GetAnimTotalTime() )
 		{
 			Vec4 forward = v::VNorm(_owner->GetDir());
 
@@ -104,6 +133,30 @@ void AttackComponent::RequestAttack()
 		if(target && target->HasTarget())
 		{
 			_owner->SetDir(target->FaceTarget(_owner->GetDir()));// 攻撃対象の方向を向く
+		}
+
+		// 地上にいる場合は攻撃状態に遷移する
+		if(_owner->IsGround())
+		{
+			_owner->SetStatus(STA::ATTACK);
+			_pendingAttack = true; // 攻撃を保留
+		}
+		else if(!_airAttackUsed)
+		{
+			// 空中にいる場合は空中攻撃を使用済みにして攻撃状態に遷移する
+			_airAttackUsed = true;
+			_owner->SetStatus(STA::ATTACK);
+			_pendingAttack = true; // 攻撃を保留
+		}
+	}
+	else
+	{
+		_pendingAttack = true; // 攻撃を保留
+
+		AnimationComponent* anim = _owner->GetAnimComponent();
+		if(anim)
+		{
+			anim->ChangeAnimation(CharaBase::STATUS::ATTACK, true); // 攻撃アニメーションを強制的に再生
 		}
 	}
 }

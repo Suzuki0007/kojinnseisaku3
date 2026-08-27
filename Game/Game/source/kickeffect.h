@@ -53,7 +53,7 @@ public:
 	virtual bool Process() override;
 	virtual bool Render() override;
 
-	void SetUp(const Vec4& startpos, const Vec4& dir, float kickdistance);
+	void SetUp(const Vec4& startpos, const Vec4& dir, float kickdistance) override;
 
 	bool IsFinished() const;
 
@@ -108,6 +108,18 @@ private:
 	void RenderSpark();// スパークの描画
 
 	static float CalcAlpha(float life, float maxLife);// 透明度の計算
+
+	virtual const char* GetCharaClassName() const override { return ""; }
+	virtual float GetSpeed() const override { return 0.0f; }
+	void CommandAttack(IBattleReceiver* target) override
+	{
+		
+	}
+
+	bool IsExceutionAction() const override
+	{
+		return false;
+	}
 
 protected:
 	std::vector<SpeedLine> _speedLine;// 線の情報を格納

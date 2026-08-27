@@ -24,6 +24,7 @@
     <ClInclude Include="source\applicationglobal.h" />
     <ClInclude Include="source\applicationmain.h" />
     <ClInclude Include="source\attackaction.h" />
+    <ClInclude Include="source\attackcomponent.h" />
     <ClInclude Include="source\battleaction.h" />
     <ClInclude Include="source\battlecommandmenu.h" />
     <ClInclude Include="source\battlereceiver.h" />
@@ -32,6 +33,7 @@
     <ClInclude Include="source\camera.h" />
     <ClInclude Include="source\charabase.h" />
     <ClInclude Include="source\cube.h" />
+    <ClInclude Include="source\dashcomponent.h" />
     <ClInclude Include="source\deadcomponent.h" />
     <ClInclude Include="source\deadstate.h" />
     <ClInclude Include="source\effectfactory.h" />
@@ -48,6 +50,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="source\rollcomponent.h" />
     <ClInclude Include="source\targetprovider.h" />
     <ClInclude Include="source\jumpcomponet.h" />
     <ClInclude Include="source\luabase.h" />
@@ -91,11 +94,13 @@
     <ClCompile Include="source\applicationglobal.cpp" />
     <ClCompile Include="source\applicationmain.cpp" />
     <ClCompile Include="source\attackaction.cpp" />
+    <ClCompile Include="source\attackcomponent.cpp" />
     <ClCompile Include="source\battlecommandmenu.cpp" />
     <ClCompile Include="source\battlescene.cpp" />
     <ClCompile Include="source\camera.cpp" />
     <ClCompile Include="source\charabase.cpp" />
     <ClCompile Include="source\cube.cpp" />
+    <ClCompile Include="source\dashcomponent.cpp" />
     <ClCompile Include="source\deadstate.cpp" />
     <ClCompile Include="source\effectfactory.cpp" />
     <ClCompile Include="source\effectmanager.cpp" />
@@ -109,8 +114,8 @@
     <ClCompile Include="source\healthcomponent.cpp" />
     <ClCompile Include="source\jumpcomponet.cpp" />
     <ClCompile Include="source\kickeffect.cpp">
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
-      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="source\luabase.cpp" />
     <ClCompile Include="source\lua_cmd.cpp" />
@@ -137,6 +142,7 @@
     <ClCompile Include="source\playerbase.cpp" />
     <ClCompile Include="source\playerfactory.cpp" />
     <ClCompile Include="source\PlayerManager.cpp" />
+    <ClCompile Include="source\rollcomponent.cpp" />
     <ClCompile Include="source\scenefactory.cpp" />
     <ClCompile Include="source\shadowmapcomponent.cpp" />
     <ClCompile Include="source\skyspherecomponent.cpp" />

@@ -3,7 +3,7 @@
 
 bool AliveState::ApplyDamage(float damage)
 {
-	_hp -= damage; // ダメージをHPから減算
+	_hp -= damage;
 	if(_hp < 0.0f)
 	{
 		_hp = 0.0f;
