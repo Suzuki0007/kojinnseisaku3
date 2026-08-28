@@ -154,7 +154,6 @@ void Player::CheckActionInput(int trg, const Vec4& v)
 	{
 		if(_status != STATUS::ATTACK)
 		{
-			_status = STATUS::ATTACK;
 			_attack->RequestAttack();
 		}
 	}

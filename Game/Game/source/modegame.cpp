@@ -328,6 +328,13 @@ bool ModeGame::Process()
 		{
 			object->Process();
 		}
+		for(auto& effect : EffectManager::GetInstance()->GetEffects())
+		{
+			if(effect)
+			{
+				effect->Process();
+			}
+		}
 
 		CheckEncount();
 
@@ -422,6 +429,14 @@ bool ModeGame::Render()
 	for(auto& object : _object)
 	{
 		object->Render();
+	}
+
+	for(auto& effect : EffectManager::GetInstance()->GetEffects())
+	{
+		if(effect)
+		{
+			effect->Render();
+		}
 	}
 
 	//_sceneBase->Render(); // ワールド中ならWorldScene、バトル中ならBattleSceneが描画される

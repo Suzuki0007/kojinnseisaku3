@@ -2,6 +2,7 @@
 #include "attackcomponent.h"
 #include "targetcomponent.h"
 #include "animationcomponent.h"
+#include "effectmanager.h"
 
 void AttackComponent::SetUpAttackCapusule(int handle, std::vector<mymath::ATTACKCOLLISION>& attackCollisionList, std::string attackChara)
 {
@@ -40,6 +41,13 @@ void AttackComponent::Update(float deltaTime)
 	if(_owner->GetStatus() != STA::ATTACK)
 	{
 		return;
+	}
+
+	// 攻撃エフェクトの位置を更新
+	if(_kickEffect)
+	{
+		_kickEffect->SetEffectPos(
+			GetBackPos());
 	}
 
 	TargetComponent* target = _owner->GetTargetComponent();
@@ -125,6 +133,13 @@ float AttackComponent::GetForwardSpeed() const
 	}
 }
 
+Vec4 AttackComponent::GetBackPos() const
+{
+	Vec4 dir = v::VNorm(_owner->GetDir());
+
+	return  v::VAdd(_owner->GetPos(), v::VGet(-dir.x * attack::BACK_POS_OFFSET, attack::BACK_POS_HEIGHT, -dir.z * attack::BACK_POS_OFFSET));
+}
+
 void AttackComponent::RequestAttack()
 {
 	if(_owner->GetStatus() != STA::ATTACK)
@@ -135,19 +150,31 @@ void AttackComponent::RequestAttack()
 			_owner->SetDir(target->FaceTarget(_owner->GetDir()));// 攻撃対象の方向を向く
 		}
 
+		bool canAttack = false;
+
 		// 地上にいる場合は攻撃状態に遷移する
 		if(_owner->IsGround())
 		{
-			_owner->SetStatus(STA::ATTACK);
-			_pendingAttack = true; // 攻撃を保留
+			canAttack = true;
 		}
 		else if(!_airAttackUsed)
 		{
 			// 空中にいる場合は空中攻撃を使用済みにして攻撃状態に遷移する
 			_airAttackUsed = true;
-			_owner->SetStatus(STA::ATTACK);
-			_pendingAttack = true; // 攻撃を保留
+			canAttack = true;
 		}
+
+		_owner->SetStatus(STA::ATTACK);
+		_pendingAttack = true; // 攻撃保留を解除
+
+		EffectManager::GetInstance()->CreateEffect
+		(
+			"KickEffect",
+			GetBackPos(),
+			_owner->GetDir(),
+			attack::APPROACH_EPSILON
+		);
+
 	}
 	else
 	{

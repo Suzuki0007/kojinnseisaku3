@@ -10,6 +10,7 @@
 #include "cube.h"
 #include "PlayerManager.h"
 #include "enemymanager.h"
+#include "effectmanager.h"
 #include "scenebase.h"
 #include "gameobserver.h"
 

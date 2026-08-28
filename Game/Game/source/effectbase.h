@@ -13,6 +13,7 @@ public:
 	virtual bool Render() override;
 
 	virtual void  SetUp(const Vec4& startpos, const Vec4& dir, float distance);
+	virtual void  SetEffectPos(const Vec4& pos);
 
 };
 

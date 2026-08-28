@@ -1,5 +1,6 @@
 #pragma once
 #include "charabase.h"
+#include "effectbase.h"
 
 namespace attack
 {
@@ -19,6 +20,10 @@ namespace attack
 	constexpr int ATTACK_CAPSULE_WAIT_TIME = 10; // 攻撃カプセルの待機時間
 	constexpr int ATTACK_CAPSULE_ACTIVE_TIME = 100; // 攻撃カプセルの有効時間
 	constexpr float ATTACK_CAPSULE_DAMAGE = 10.0f; // 攻撃カプセルのダメージ量
+
+	// 攻撃エフェクトの位置
+	constexpr float BACK_POS_OFFSET = 50.0f; // 攻撃エフェクトの位置の後方
+	constexpr float BACK_POS_HEIGHT = 50.0f; // 攻撃エフェクトの位置の高さ
 }
 
 class AttackComponent final : public Component<CharaBase>
@@ -48,6 +53,10 @@ public:
 
 private:
 	void ExecuteAttack(); // 攻撃カプセル生成処理を実行する
+
+	Vec4 GetBackPos() const;
+
+	EffectBase* _kickEffect{ nullptr }; // 攻撃エフェクト
 
 	bool _pendingAttack{ false }; // 攻撃保留フラグ
 	bool _airAttackUsed{ false }; // 空中攻撃使用済みフラグ

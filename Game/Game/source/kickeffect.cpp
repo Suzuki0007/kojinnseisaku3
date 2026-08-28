@@ -42,10 +42,6 @@ bool KickEffect::Initialize()
 	_spark.clear();
 	_started = true;
 
-	
-
-	SpawnSpeedLine();
-
 	return true;
 }
 
@@ -66,6 +62,13 @@ void KickEffect::SetUp(const Vec4& startpos, const Vec4& dir, float kickdistance
 	_up = v::VGet(upVec.x, upVec.y, upVec.z);// 上方向ベクトルを設定
 
 	_kickDistanceCache = kickdistance;
+
+	SpawnSpeedLine();
+}
+
+void KickEffect::SetEffectPos(const Vec4& pos)
+{
+	_basePos = pos;
 }
 
 bool KickEffect::Terminate()

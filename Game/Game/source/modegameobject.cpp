@@ -57,6 +57,11 @@ bool ModeGame::ObjectInitialize()
 		_chara.emplace_back(enemy.get());
 	}
 
+	// エフェクト初期化
+	auto* effectm = EffectManager::GetInstance();
+	effectm->RegisterType();
+
+
 	ChangeState(GameState::World, -1);
 
 	return true;

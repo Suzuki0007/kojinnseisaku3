@@ -10,6 +10,16 @@ bool EffectBase::Initialize()
 	return true;
 }
 
+void EffectBase::SetUp(const Vec4& startpos, const Vec4& dir, float distance)
+{
+
+}
+
+void EffectBase::SetEffectPos(const Vec4& pos)
+{
+
+}
+
 bool EffectBase::Terminate()
 {
 	base::Terminate();

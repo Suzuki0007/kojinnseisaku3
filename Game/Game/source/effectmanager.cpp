@@ -7,7 +7,19 @@ void  EffectManager::RegisterType()
 	OMB::RegisterType("KickEffect", []() { return std::make_unique<KickEffect>(); });
 }
 
-void EffectManager::CreateEffect(const std::string& type)
+void EffectManager::CreateEffect(const std::string& type, const Vec4& pos, const Vec4& dir, float distance)
 {
+	auto& effects = GetAll();
+	size_t oldSize = effects.size();
 	Create(type);
+
+	if(effects.size() == oldSize)
+	{
+		return;
+	}
+
+	EffectBase* effect = effects.back().get();
+
+	effect->Initialize();
+	effect->SetUp(pos, dir, distance);
 }

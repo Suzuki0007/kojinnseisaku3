@@ -5,11 +5,11 @@ namespace kick
 {
 	// 線
 	static constexpr int SPEED_LINE_COUNT = 5;// 線の本数
-	static constexpr float SPEED_LINE_LIFE = 0.35f; // 線の寿命
+	static constexpr float SPEED_LINE_LIFE = 1.5f; // 線の寿命
 	static constexpr float SPEED_LINE_LIFE_VAR = 0.05f; // 線の寿命のばらつき
 	static constexpr float SPEED_LINE_OFFSET_MAX = 8.0f; // 上下のオフセットの最大値
-	static constexpr float SPEED_LINE_LENGTH_MIN = 60.0f; // 線の長さの最小値
-	static constexpr float SPEED_LINE_LENGTH_MAX = 120.0f; // 線の長さの最大値
+	static constexpr float SPEED_LINE_LENGTH_MIN = 0.0f; // 線の長さの最小値
+	static constexpr float SPEED_LINE_LENGTH_MAX = 2000.0f; // 線の長さの最大値
 	static unsigned int SPEED_LINE_COLOR_R = 150;
 	static unsigned int SPEED_LINE_COLOR_G = 230;
 	static unsigned int SPEED_LINE_COLOR_B = 255;
@@ -54,6 +54,7 @@ public:
 	virtual bool Render() override;
 
 	void SetUp(const Vec4& startpos, const Vec4& dir, float kickdistance) override;
+	void SetEffectPos(const Vec4& pos) override;
 
 	bool IsFinished() const;
 

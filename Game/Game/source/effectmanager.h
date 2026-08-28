@@ -3,7 +3,7 @@
 #include "effectfactory.h"
 #include "objectmanagerbase.h"
 
-class EffectManager : public Singleton<EffekseerManager>, public ObjectManagerBase<EffectBase, EffectFactory>
+class EffectManager : public Singleton<EffectManager>, public ObjectManagerBase<EffectBase, EffectFactory>
 {
 	friend class Singleton<EffectManager>;
 
@@ -11,7 +11,8 @@ public:
 	using OMB = ObjectManagerBase<EffectBase, EffectFactory>;
 
 	void RegisterType();
-	void CreateEffect(const std::string& type);
+	void CreateEffect(const std::string& type,const Vec4& pos, const Vec4& dir, float distance);
+
 	
 	std::vector<std::unique_ptr<EffectBase>>& GetEffects() { return GetAll(); }
 
