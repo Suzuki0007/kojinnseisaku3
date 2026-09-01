@@ -75,15 +75,8 @@ bool Camera::Process()
 {
 	InputDevice& input = InputLocator::Get();
 
-	float rx = 0.0f;
-	float ry = 0.0f;
-
-	if(_isLock)
-	{
-		// カメラがロックされていない場合、右スティックの入力を取得
-		rx = input.GetRightStickX();
-		ry = input.GetRightStickY();
-	}
+	float rx = input.GetRightStickX();
+	float ry = input.GetRightStickY();
 
 	// 1. 右スティックによるカメラ角度の変更（カメラクラスの責務）
 	if(rx < -analogMin) { _angle += rotateSpeed; } // 左回転

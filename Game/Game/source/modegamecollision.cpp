@@ -137,6 +137,8 @@ bool ModeGame::CharaToCharaCollision(CharaBase* c1, CharaBase* c2)
 		PushChara(move, stop);
 	}
 
+	VC::DrawCapsule3D(c1_top, c1_bottom, c1_r, 8, GetColor(255, 255, 0), GetColor(255, 255, 0), FALSE);
+
 	return true;
 }
 
@@ -166,6 +168,12 @@ bool ModeGame::CharaToCubeCollision(CharaBase* chara, Cube* cube)
 	if(!IsHitSphereAABB(pos, r, box))
 	{
 		return false;
+	}
+
+	// ƒvƒŒƒCƒ„[‚ªUŒ‚’†‚ÅCube‚ÉÚG‚µ‚½‚çAUŒ‚‚ðƒLƒƒƒ“ƒZƒ‹‚·‚é
+	if(chara == player && chara->GetStatus() == CharaBase::STATUS::ATTACK)
+	{
+		chara->CancelAttackCube();
 	}
 
 	float dxmin = box.min.x - (pos.x + r);

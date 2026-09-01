@@ -205,4 +205,6 @@ namespace easing
 
 	float EasingInBack(float cnt, float start, float end, float frames);
 	void TestEasing();
+
+	float EasingSmoothStep(float cnt, float frames, float start = 0.0f, float end = 1.0f ); //三次関数による滑らかな加速・減速(開始はゆっくり消え、中間で比較的早く消える、終了は再びゆっくり消える)
 }

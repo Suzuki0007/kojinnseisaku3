@@ -294,5 +294,29 @@ namespace easing
 			printf("Frame %d: %f\n", i, val);
 		}
 	}
+
+	float EasingSmoothStep(float cnt, float frames, float start, float end)
+	{
+		if(frames <= 0.0f)
+		{
+			return end;
+		}
+
+		float t = cnt / frames;
+
+		if(t < 0.0f)
+		{
+			t = 0.0f;
+		}
+		else if(t > 1.0f)
+		{
+			t = 1.0f;
+		}
+
+		// SmoothStep
+		t = t * t * ( 3.0f - 2.0f * t );
+
+		return start + ( end - start ) * t;
+	}
 }
 

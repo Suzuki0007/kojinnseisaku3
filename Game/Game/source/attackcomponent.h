@@ -17,7 +17,7 @@ namespace attack
 	constexpr Vec4 ATTACK_CAPSULE_UNDER_POS = v::VGet(0.0f, 0.0f, 0.0f); // 攻撃カプセルの下方向
 	constexpr Vec4 ATTACK_CAPSULE_OVER_POS = v::VGet(0.0f, 0.0f, 0.0f); // 攻撃カプセルの上方向
 	constexpr float ATTACK_CAPSULE_RADIUS = 80.0f; // 攻撃カプセルの半径
-	constexpr int ATTACK_CAPSULE_WAIT_TIME = 10; // 攻撃カプセルの待機時間
+	constexpr int ATTACK_CAPSULE_WAIT_TIME = 0; // 攻撃カプセルの待機時間
 	constexpr int ATTACK_CAPSULE_ACTIVE_TIME = 100; // 攻撃カプセルの有効時間
 	constexpr float ATTACK_CAPSULE_DAMAGE = 10.0f; // 攻撃カプセルのダメージ量
 

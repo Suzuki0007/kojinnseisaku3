@@ -46,8 +46,7 @@ void AttackComponent::Update(float deltaTime)
 	// 攻撃エフェクトの位置を更新
 	if(_kickEffect)
 	{
-		_kickEffect->SetEffectPos(
-			GetBackPos());
+		_kickEffect->SetEffectPos(GetBackPos());
 	}
 
 	TargetComponent* target = _owner->GetTargetComponent();
@@ -55,6 +54,12 @@ void AttackComponent::Update(float deltaTime)
 	// 攻撃対象がいない場合は待機状態に戻す
 	if(!(target && target->HasTarget()))
 	{
+		if(_kickEffect)
+		{
+			_kickEffect->EndAttack();
+			_kickEffect = nullptr;
+		}
+
 		_owner->SetStatus(STA::WAIT);
 		return;
 	}
@@ -89,6 +94,13 @@ void AttackComponent::Update(float deltaTime)
 				ExecuteAttack(); // 攻撃カプセル生成処理を実行
 				_pendingAttack = false; // 攻撃保留を解除
 			}
+
+			if(_kickEffect)
+			{
+				_kickEffect->EndAttack();
+				_kickEffect = nullptr;
+			}
+
 			_owner->SetStatus(STA::WAIT);
 		}
 	}
@@ -167,13 +179,11 @@ void AttackComponent::RequestAttack()
 		_owner->SetStatus(STA::ATTACK);
 		_pendingAttack = true; // 攻撃保留を解除
 
-		EffectManager::GetInstance()->CreateEffect
-		(
+		_kickEffect = EffectManager::GetInstance()->CreateEffect(
 			"KickEffect",
 			GetBackPos(),
 			_owner->GetDir(),
-			attack::APPROACH_EPSILON
-		);
+			attack::APPROACH_EPSILON);
 
 	}
 	else

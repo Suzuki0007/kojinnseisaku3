@@ -76,3 +76,24 @@ void JumpComponent::SetGround(bool ground)
 	}
 	_isGround = ground;
 }
+
+void JumpComponent::UpdateWithoutFall()
+{
+	// 落下処理をスキップしてジャンプ処理のみを行う
+	if(_jumpRequest && _isGround)
+	{
+		Jump();
+		_jumpRequest = false;
+	}
+	else if(_jumpRequest && !_isGround && _currentJumpCount < _maxJumpCount)
+	{
+		Jump();
+		_jumpRequest = false;
+	}
+}
+
+void JumpComponent::ResetJumpState()
+{
+	_currentJumpCount = 0; // ジャンプ回数をリセットする
+	_jumpRequest = false; // ジャンプ要求をリセットする
+}

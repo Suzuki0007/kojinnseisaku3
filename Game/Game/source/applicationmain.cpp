@@ -3,6 +3,7 @@
 #include "applicationglobal.h"
 #include "modegame.h"
 #include "modetitle.h"
+#include "modegameover.h"
 
 // 実体
 ApplicationMain g_application_main;

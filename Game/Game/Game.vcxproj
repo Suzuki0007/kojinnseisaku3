@@ -53,11 +53,13 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="source\goal.h" />
+    <ClInclude Include="source\hangtimecomponent.h" />
     <ClInclude Include="source\healthcomponent.h" />
     <ClInclude Include="source\kickeffect.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
+    <ClInclude Include="source\modegameover.h" />
     <ClInclude Include="source\rollcomponent.h" />
     <ClInclude Include="source\stagedefinition.h" />
     <ClInclude Include="source\targetprovider.h" />
@@ -93,7 +95,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="source\shadowmapcomponent.h" />
-    <ClInclude Include="source\skyspherecomponent.h" />
+    <ClInclude Include="source\skysphere.h" />
     <ClInclude Include="source\speedcomponent.h" />
     <ClInclude Include="source\statemanager.h" />
     <ClInclude Include="source\targetcomponent.h" />
@@ -137,6 +139,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="source\goal.cpp" />
+    <ClCompile Include="source\hangtimecomponent.cpp" />
     <ClCompile Include="source\healthcomponent.cpp" />
     <ClCompile Include="source\jumpcomponet.cpp" />
     <ClCompile Include="source\kickeffect.cpp">
@@ -154,6 +157,7 @@
     <ClCompile Include="source\modegamecollision.cpp" />
     <ClCompile Include="source\modegamedebug.cpp" />
     <ClCompile Include="source\modegameobject.cpp" />
+    <ClCompile Include="source\modegameover.cpp" />
     <ClCompile Include="source\modemenu.cpp" />
     <ClCompile Include="source\modetitle.cpp" />
     <ClCompile Include="source\neartargetstrategy.cpp" />
@@ -174,7 +178,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
     <ClCompile Include="source\shadowmapcomponent.cpp" />
-    <ClCompile Include="source\skyspherecomponent.cpp" />
+    <ClCompile Include="source\skysphere.cpp" />
     <ClCompile Include="source\statemanager.cpp" />
     <ClCompile Include="source\targetcomponent.cpp" />
     <ClCompile Include="source\targetstrategybase.cpp" />

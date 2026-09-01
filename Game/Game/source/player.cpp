@@ -30,7 +30,7 @@ bool Player::Initialize()
 	_collision_r = 30.0f;
 	_collision_weight = 20.0f;
 	_cam = nullptr;
-	_mv_speed = 6.0f;
+	_mv_speed = 12.0f;
 
 	_air_control = 1.0f;
 	_battleSpeed = 5.0f;
@@ -38,6 +38,7 @@ bool Player::Initialize()
 	_charaId = 1;
 
 	_attack = AddComponent<AttackComponent>();
+	_hangtime = AddComponent<HangTimeComponent>();
 	_attack->SetUpAttackCapusule(_handle, _attack_collision, "Player");
 
 	_anim = AddComponent<AnimationComponent>();
@@ -47,7 +48,7 @@ bool Player::Initialize()
 			//AnimtionClip(アニメーション名, ループするか, 再生速度, 再生速度のばらつき, 開始オフセットの最大値)
 			AnimationClip("mot_attack_charge_loop", true, 1.0f, 0.1f, 30), // WAIT
 			AnimationClip("mot_move_run"),                              // WALK
-			AnimationClip("mot_move_jump_f_start", false, 0.4f),              // JUMP
+			AnimationClip("mot_move_jump_f_start", true, 0.5f),              // JUMP
 			AnimationClip("mot_move_jump_f_downloop"),                  // FALL
 			AnimationClip("mot_attack_nomal", false, 2.0f),             // ATTACK
 			AnimationClip("mot_move_land", false),                      // LANDING
@@ -126,20 +127,23 @@ Vec4 Player::MoveVector(int key)
 void Player::CheckActionInput(int trg, const Vec4& v)
 {
 	// ジャンプ入力
-	if(trg & PAD_INPUT_1)
+	if(_status != STATUS::ATTACK && (trg & PAD_INPUT_1))
 	{
 		if(_jump->IsGround())
 		{
-			// ジャンプ
+			// 地上ジャンプ
 			_jump->RequestJump();
 		}
-		else
+		else if(_hangtime->IsActive())
 		{
-			// 空中ダッシュ
-			if(!_dash->IsDashing())
-			{
-				_dash->RequestDash(v, _dir);
-			}
+			// 攻撃終了後の滞空中はジャンプ可能
+			_jump->RequestJump();
+			_hangtime->Reset();
+		}
+		else if(!_dash->IsDashing())
+		{
+			// 通常の空中状態ではダッシュ
+			_dash->RequestDash(v, _dir);
 		}
 	}
 
@@ -154,6 +158,10 @@ void Player::CheckActionInput(int trg, const Vec4& v)
 	{
 		if(_status != STATUS::ATTACK)
 		{
+			_dash->CancelDash();
+			_jump->ResetJumpState();
+			_hangtime->Reset();
+
 			_attack->RequestAttack();
 		}
 	}
@@ -165,107 +173,153 @@ void Player::ExcecuteMovement(const Vec4& v, CharaBase::STATUS oldStatus)
 	{
 		_attack->Update(1.0f);
 	}
-	else if(_jump->IsJumping())
-	{
-		if(_pos.y <= 0.0f)
-		{
-			_pos.y = 0.0f;
-			_jump->SetGround(true);
-			_dash->CancelDash();
-			_attack->ResetAirAttack();
-		}
-
-		// ダッシュ処理
-		if(_dash->IsDashing())
-		{
-			_dash->Update(1.0f);
-		}
-		else
-		{
-			// 空中通常移動（v はワールド移動量）
-			if(v::VSize(v) > 0.0f)
-			{
-				_pos.x += v.x * _air_control;
-				_pos.z += v.z * _air_control;
-				// 軸ロック中は向きを固定
-				_dir = v;
-			}
-		}
-	}
 	else
 	{
-		if(_roll->IsRolling())
-		{
-			_roll->Update(1.0f);
-		}
-		else
-		{
-			// 地上移動（v はワールド移動量）
-			if(v::VSize(v) > 0.0f && _status != STATUS::ATTACK)
-			{
-				_dir = v;
+		UpdateJump();
 
-				_status = STATUS::WALK;
-				PlayerMove(v);
+		if(_jump->IsJumping())
+		{
+			if(_pos.y <= 0.0f)
+			{
+				_pos.y = 0.0f;
+				_jump->SetGround(true);
+				_dash->CancelDash();
+				_attack->ResetAirAttack();
+			}
+
+			if(_dash->IsDashing())
+			{
+				_dash->Update(1.0f);
 			}
 			else
 			{
-				_status = STATUS::WAIT;
-				if(oldStatus == STATUS::FALL)
+				if(v::VSize(v) > 0.0f)
 				{
-					_status = STATUS::LANDING;
-				}
-				else if(oldStatus == STATUS::LANDING && !_anim->IsAnimationEnd())
-				{
-					_status = STATUS::LANDING; // まだ再生中なら継続
-				}
-				else
-				{
-					_status = STATUS::WAIT; // 再生終了後は待機状態に戻す
+					_pos.x += v.x * _air_control;
+					_pos.z += v.z * _air_control;
+					_dir = v;
 				}
 			}
 		}
+		else
+		{
+			// 既存の地上処理
+			if(_roll->IsRolling())
+			{
+				_roll->Update(1.0f);
+			}
+			else
+			{
+				if(v::VSize(v) > 0.0f && _status != STATUS::ATTACK)
+				{
+					_dir = v;
+					_status = STATUS::WALK;
+					PlayerMove(v);
+				}
+				else
+				{
+					_status = STATUS::WAIT;
+
+					if(oldStatus == STATUS::FALL)
+					{
+						_status = STATUS::LANDING;
+					}
+					else if(oldStatus == STATUS::LANDING &&
+						!_anim->IsAnimationEnd())
+					{
+						_status = STATUS::LANDING;
+					}
+				}
+			}
+		}
+	}
+
+	// 攻撃状態から抜けた直後に、空中なら滞空開始
+	if(oldStatus == STATUS::ATTACK &&
+		_status != STATUS::ATTACK &&
+		_jump->IsJumping())
+	{
+		_hangtime->Start();
+	}
+}
+
+void Player::UpdateJump()
+{
+	if(_status == STATUS::ATTACK)
+	{
+		return;
+	}
+
+	if(_hangtime->IsActive() && _jump->IsJumping())
+	{
+		_jump->UpdateWithoutFall();
+	}
+	else
+	{
+		_jump->Update(1.0f);
 	}
 }
 
 void Player::Targeting(InputDevice& input)
 {
-	if(_targetComponent)
+	if(!_targetComponent)
 	{
-		_targetComponent->SetCamera(_cam);
-		_targetComponent->RefreshCandidate();
+		return;
+	}
 
+	_targetComponent->SetCamera(_cam);
+
+	// 攻撃中は候補更新を行わない。
+	// カメラを動かしても、現在のターゲットを維持する。
+	if(_status == STATUS::ATTACK)
+	{
 		if(!_targetComponent->HasTarget())
 		{
 			_targetComponent->AcquireTarget();
-
 		}
 
-		if(input.IsTrigger(InputButton::LeftTarget))
-		{
-			_targetComponent->CycleTarget(TargetComponent::CycleDirection::Left);
-		}
+		return;
+	}
 
-		if(input.IsTrigger(InputButton::RightTarget))
-		{
-			_targetComponent->CycleTarget(TargetComponent::CycleDirection::Right);
-		}
+	// 攻撃していないときだけターゲット候補を更新する
+	_targetComponent->RefreshCandidate();
+
+	if(!_targetComponent->HasTarget())
+	{
+		_targetComponent->AcquireTarget();
+	}
+
+	if(input.IsTrigger(InputButton::LeftTarget))
+	{
+		_targetComponent->CycleTarget
+		(
+			TargetComponent::CycleDirection::Left
+		);
+	}
+
+	if(input.IsTrigger(InputButton::RightTarget))
+	{
+		_targetComponent->CycleTarget
+		(
+			TargetComponent::CycleDirection::Right
+		);
 	}
 }
 
-void Player::UpdateBattle()
+void Player::CancelAttackCube()
 {
-	if(_status == STATUS::NONE)
+	if(_status != STATUS::ATTACK)
 	{
-		_status = STATUS::WAIT;
+		return;
 	}
 
-	if(_status == STATUS::ATTACK)
+	_status = STATUS::FALL;
+
+	_attack_collision.clear();
+
+	if(_jump && _jump->IsJumping() && _hangtime)
 	{
-		if(_anim->IsAnimationEnd())
-		{
-			_status = STATUS::WAIT;
-		}
+		_hangtime->Start();
 	}
 }
 
@@ -286,29 +340,17 @@ bool Player::Process()
 	// 処理前のステータスを保存しておく
 	CharaBase::STATUS old_status = _status;
 
-	if(_status != STATUS::ATTACK)
-	{
-		_jump->Update(1.0f);
-	}
-
 	Vec4 moveVector = v::VGet(0.0f, 0.0f, 0.0f);
 
 	// 移動処理
-	if(_canControl)
-	{
-		moveVector = MoveVector(key);
-		CheckActionInput(trg, moveVector);
-		ExcecuteMovement(moveVector, old_status);
-	}
-	else
-	{
-		UpdateBattle();
-	}
-
+	moveVector = MoveVector(key);
+	CheckActionInput(trg, moveVector);
+	ExcecuteMovement(moveVector, old_status);
 	Targeting(input);
 
 	//ChangeAnim(old_status);
 	_anim->Update(1.0f);
+	_hangtime->Update(1.0f);
 	
 	return true;
 }

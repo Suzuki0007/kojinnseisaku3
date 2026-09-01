@@ -5,6 +5,7 @@
 #include "map.h"
 #include "enemytargetprovider.h"
 #include "neartargetstrategy.h"
+#include "skysphere.h"
 
 // オブジェクトの初期化
 // オブジェクトの初期化
@@ -21,6 +22,14 @@ bool ModeGame::ObjectInitialize()
 	// マップ初期化
 	_map = std::make_shared<Map>();
 	_object.emplace_back(_map);
+
+	// スカイスフィア初期化
+	_skySphere = std::make_shared<SkySphere>();
+	_object.emplace_back(_skySphere);
+
+	// ゴール初期化
+	_goal = std::make_shared<Goal>();
+	_chara.emplace_back(_goal.get());
 
 	// プレイヤー初期化
 	auto* pm = PlayerManager::GetInstance();

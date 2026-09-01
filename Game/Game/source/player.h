@@ -4,6 +4,7 @@
 #include "camera.h"
 #include "targetcomponent.h"
 #include "attackcomponent.h"
+#include "hangtimecomponent.h"
 
 class Player : public PlayerBase
 {
@@ -48,6 +49,8 @@ public:
 	void CheckActionInput(int trg, const Vec4& v);
 	void ExcecuteMovement(const Vec4& v, CharaBase::STATUS oldStatus);
 	void ChangeAnim(CharaBase::STATUS next);
+	void UpdateJump();
+	void CancelAttackCube() override;
 
 	void Targeting(InputDevice& input);
 
@@ -55,6 +58,7 @@ protected:
 	Camera* _cam;
 
 	AttackComponent* _attack;
+	HangTimeComponent* _hangtime;
 
 	float _air_control;			// 空中制御係数
 };

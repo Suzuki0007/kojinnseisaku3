@@ -77,7 +77,7 @@ bool ModeGame::DebugRender()
 		}
 	}
 
-	if(_d_view_collision)
+	if(!_d_view_collision)
 	{
 		auto* player = PlayerManager::GetInstance()->GetPlayer().front().get();
 		if(!player) { return false; }
@@ -111,6 +111,45 @@ bool ModeGame::DebugRender()
 			{
 				VC::DrawCapsule3D(c1_top, c1_bottom, c1_r, 8, GetColor(255, 255, 0), GetColor(255, 255, 255), DX_FILL_SOLID);
 			}
+		}
+
+
+		// プレイヤーとゴールの当たり判定カプセルを表示
+		if(_goal)
+		{
+			const auto drawCharaCapsule =
+				[](CharaBase* chara, int sideColor)
+				{
+					if(!chara)
+					{
+						return;
+					}
+
+					const Vec4 pos = chara->GetPos();
+					const float half = chara->GetColSubY();
+					const float radius =
+						static_cast<float>(chara->GetCollisionR());
+
+					const Vec4 top =
+						v::VAdd(pos, v::VGet(0.0f, half, 0.0f));
+					const Vec4 bottom =
+						v::VAdd(pos, v::VGet(0.0f, -half, 0.0f));
+
+					VC::DrawCapsule3D(
+						top,
+						bottom,
+						radius,
+						8,
+						sideColor,
+						GetColor(255, 255, 255),
+						DX_FILL_WIREFRAME);
+				};
+
+			// プレイヤー: 緑
+			drawCharaCapsule(player, GetColor(0, 255, 0));
+
+			// ゴール: 青
+			drawCharaCapsule(_goal.get(), GetColor(0, 128, 255));
 		}
 	}
 

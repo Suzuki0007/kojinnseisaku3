@@ -12,6 +12,7 @@ public:
     void RegisterType();
     void CreateEnemy(const std::string& type);
 	std::vector<std::unique_ptr<EnemyBase>>& GetEnemies() { return GetAll(); }
+    void ClearEnemies() { Clear(); }
 
 private:
     EnemyManager() = default;

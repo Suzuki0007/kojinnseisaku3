@@ -35,6 +35,11 @@ public:
 		std::make_pair("BombEffect"sv, "res/Effect/bomb.efkefc"sv),
 	};
 
+	inline constexpr static std::array Goal =
+	{
+		std::make_pair("Goal"sv, "res/Texture/GoalPoint.png"sv),
+	};
+
 	constexpr static std::string_view GetEnemyPath(std::string_view name)
 	{
 		return FindPath(Enemy, name);
@@ -53,6 +58,11 @@ public:
 	constexpr static std::string_view GetEffectPath(std::string_view name)
 	{
 		return FindPath(Effect, name);
+	}
+
+	constexpr static std::string_view GetGoalPath(std::string_view name)
+	{
+		return FindPath(Goal, name);
 	}
 
 	// 配列の中から指定された名前に対応するパスを返す関数
@@ -99,5 +109,10 @@ namespace path
 	inline constexpr auto Effect = [](std::string_view name)
 	{
 		return ResourcePath::GetEffectPath(name);
+	};
+
+	inline constexpr auto Goal = [](std::string_view name)
+	{
+			return ResourcePath::GetGoalPath(name);
 	};
 }

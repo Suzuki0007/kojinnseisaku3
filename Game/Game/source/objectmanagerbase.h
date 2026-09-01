@@ -33,6 +33,11 @@ public:
 	std::vector<std::unique_ptr<T>>& GetAll() { return _object; }
 	const std::vector<std::unique_ptr<T>>& GetOwner() { return _object; }
 
+	void Clear()
+	{
+		_object.clear();
+	}
+
 protected:
 	ObjectManagerBase() = default;
 	virtual ~ObjectManagerBase() = default;

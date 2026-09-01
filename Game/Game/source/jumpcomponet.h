@@ -23,6 +23,8 @@ public:
 	void Jump();// ジャンプ処理
 	void Fall();// 落下処理
 	void Land();// 着地処理
+	void UpdateWithoutFall();
+	void ResetJumpState();// ジャンプ状態をリセットする
 
 	void Update(float deltaTime) override;
 

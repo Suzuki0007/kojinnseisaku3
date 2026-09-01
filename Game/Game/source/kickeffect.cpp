@@ -62,13 +62,31 @@ void KickEffect::SetUp(const Vec4& startpos, const Vec4& dir, float kickdistance
 	_up = v::VGet(upVec.x, upVec.y, upVec.z);// 上方向ベクトルを設定
 
 	_kickDistanceCache = kickdistance;
+	_travelDistance = 0.0f;
 
 	SpawnSpeedLine();
 }
 
 void KickEffect::SetEffectPos(const Vec4& pos)
 {
+	Vec4 movement = v::VSub(pos, _basePos);// 移動量を計算
+
+	if(!_ending)
+	{
+		_travelDistance += v::VSize(movement);// 移動距離を更新
+	}
+
 	_basePos = pos;
+
+	for(auto& ring : _ring)
+	{
+		ring.center = pos;
+	}
+
+	for(auto& spark : _spark)
+	{
+		spark.pos = v::VAdd(spark.pos, movement);
+	}
 }
 
 bool KickEffect::Terminate()
@@ -95,7 +113,8 @@ void KickEffect::SpawnSpeedLine()
 		_speedLine.push_back(SpeedLine
 			{
 				.offset = v::VScale(_up, offsetAmount),// 上下のオフセットを設定
-				.lenght = RandomRange(kick::SPEED_LINE_LENGTH_MIN, kick::SPEED_LINE_LENGTH_MAX),// 長さをランダムに設定
+				.lenght = 0.0f,// 長さを設定
+				.growthRatio = RandomRange(kick::SPEED_LINE_GROWTH_MIN,kick::SPEED_LINE_GROWTH_MAX),// 成長率をランダムに設定
 				.life = maxLife,// 寿命を設定
 				.maxLife = maxLife,// 最大寿命を設定
 				.color = GetColor(kick::SPEED_LINE_COLOR_R, kick::SPEED_LINE_COLOR_G, kick::SPEED_LINE_COLOR_B)// 色を設定
@@ -160,19 +179,27 @@ bool KickEffect::Process()
 
 	_elapsedTime += dt;// 経過時間を更新
 
-	// 線を1回だけ生成する
-	if(!_ringSpawned && _elapsedTime >= kick::RING_DELAY)
+	if(_ending)
 	{
-		SpawnRing();
-		_ringSpawned = true;
+		_fadeElapsedTime += dt;// フェードアウトの経過時間を更新
+	}
+	else
+	{
+		// 線を1回だけ生成する
+		if(!_ringSpawned && _elapsedTime >= kick::RING_DELAY)
+		{
+			SpawnRing();
+			_ringSpawned = true;
+		}
+
+		// リングを1回だけ生成する
+		if(!_sparkSpawned && _elapsedTime >= kick::SPARK_DELAY)
+		{
+			SpawnSpark();
+			_sparkSpawned = true;
+		}
 	}
 
-	// リングを1回だけ生成する
-	if(!_sparkSpawned && _elapsedTime >= kick::SPARK_DELAY)
-	{
-		SpawnSpark();
-		_sparkSpawned = true;
-	}
 
 	UpdateSpeedLines(dt);// 線の更新
 	UpdateRings(dt);// リングの更新
@@ -188,6 +215,12 @@ void KickEffect::UpdateSpeedLines(float deltaTime)
 	for(auto& line : _speedLine)
 	{
 		line.life -= deltaTime;
+
+		// 線の長さを成長率に応じて更新
+		line.lenght = clamp::MyClamp(
+			_travelDistance,
+			kick::SPEED_LINE_LENGTH_MIN,
+			kick::SPEED_LINE_LENGTH_MAX);
 	}
 
 	std::erase_if(_speedLine, [](const SpeedLine& line) { return line.life <= 0.0f; });// 寿命が0以下の線を削除
@@ -218,12 +251,36 @@ void KickEffect::UpdateSparks(float deltaTime)
 
 bool KickEffect::IsFinished() const
 {
-	return _started && _speedLine.empty() && _ring.empty() && _spark.empty();
+	return _started && _ending && _fadeElapsedTime >= kick::FADE_OUT_TIME;
 }
 
 float KickEffect::CalcAlpha(float life, float maxLife)
 {
 	return life / maxLife;// 寿命に応じて透明度を計算
+}
+
+void KickEffect::EndAttack()
+{
+	if(_ending)
+	{
+		return;
+	}
+
+	_ending = true;
+	_fadeElapsedTime = 0.0f;
+}
+
+float KickEffect::GetFadeAlpha() const
+{
+	if(!_ending)
+	{
+		return 1.0f;
+	}
+
+	return easing::EasingSmoothStep(
+		_fadeElapsedTime,
+		kick::FADE_OUT_TIME
+	);
 }
 
 bool KickEffect::Render()
@@ -246,11 +303,15 @@ void KickEffect::RenderSpeedLine()
 {
 	for(const auto& line : _speedLine)
 	{
-		float alpha = CalcAlpha(line.life, line.maxLife);// 線の透明度を計算
-		Vec4 center = v::VAdd(_basePos, line.offset);// 線の中心位置を計算
-		Vec4 p1 = v::VAdd(center, v::VScale(_dir, line.lenght * HALF_LENGTH));// 線の始点を計算
-		Vec4 p2 = v::VAdd(center, v::VScale(_dir, -line.lenght * HALF_LENGTH));// 線の終点を計算
-		RenderLineWithAlpha(p1, p2, line.color, alpha);// 線を描画
+		float alpha = CalcAlpha(line.life, line.maxLife) * GetFadeAlpha();// 線の透明度を計算
+		Vec4 start = v::VAdd(_basePos,line.offset);
+		Vec4 end = v::VAdd(_basePos,v::VScale(_dir, -line.lenght));
+
+		RenderLineWithAlpha(
+			start,
+			end,
+			line.color,
+			alpha);
 	}
 }
 
@@ -258,7 +319,7 @@ void KickEffect::RenderRing()
 {
 	for(const auto& ring : _ring)
 	{
-		float alpha = CalcAlpha(ring.life, ring.maxLife);// リングの透明度を計算
+		float alpha = CalcAlpha(ring.life, ring.maxLife) * GetFadeAlpha();// リングの透明度を計算
 
 		for(int i = 0; i < ring.segment; i++)
 		{
@@ -275,7 +336,7 @@ void KickEffect::RenderSpark()
 {
 	for(const auto& spark : _spark)
 	{
-		float alpha = CalcAlpha(spark.life, spark.maxLife);// スパークの透明度を計算
+		float alpha = CalcAlpha(spark.life, spark.maxLife) * GetFadeAlpha();// スパークの透明度を計算
 		Vec4 tail = v::VAdd(spark.pos, v::VScale(spark.dir, -spark.length));// スパークの尾の位置を計算
 		RenderLineWithAlpha(tail, spark.pos, spark.color, alpha);// スパークを描画
 	}

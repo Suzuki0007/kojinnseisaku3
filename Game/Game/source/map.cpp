@@ -7,7 +7,7 @@ bool Map::Initialize()
 	if(!base::Initialize()) { return false; }
 
 	// マップ
-	_handle_sky_sphere = MV1LoadModel("res/SkySphere/skysphere.mv1");
+	//_handle_sky_sphere = MV1LoadModel("res/SkySphere/skysphere.mv1");
 
 	constexpr int MAP_SELECT = 2;
 

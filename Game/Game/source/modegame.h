@@ -11,6 +11,8 @@
 #include "PlayerManager.h"
 #include "enemymanager.h"
 #include "effectmanager.h"
+#include "skysphere.h"
+#include "goal.h"
 //#include "scenebase.h"
 //#include "gameobserver.h"
 
@@ -89,13 +91,15 @@ private:
 
 protected:
 	Camera* _camera;
-
 	// キャラクタ管理
-		// キャラクタ管理
 	std::vector<CharaBase*> _chara;
 	std::vector<std::shared_ptr<ObjectBase>> _object;
 	// マップ
 	std::shared_ptr<MapBase> _map;
+	// スカイスフィア
+	std::shared_ptr<SkySphere> _skySphere;
+	// ゴール
+	std::shared_ptr<Goal> _goal;
 	// キューブ
 	std::vector<std::shared_ptr<Cube>> _cube;
 	// デバッグ用

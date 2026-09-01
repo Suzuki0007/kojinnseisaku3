@@ -11,7 +11,11 @@ public:
 	using OMB = ObjectManagerBase<EffectBase, EffectFactory>;
 
 	void RegisterType();
-	void CreateEffect(const std::string& type,const Vec4& pos, const Vec4& dir = Vec4::Zero(), float distance = 0.0f);
+	EffectBase* CreateEffect(
+		const std::string& type,
+		const Vec4& pos,
+		const Vec4& dir = Vec4::Zero(),
+		float distance = 0.0f);
 
 	
 	std::vector<std::unique_ptr<EffectBase>>& GetEffects() { return GetAll(); }

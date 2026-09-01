@@ -5,6 +5,8 @@
 #include "modetitle.h"
 #include "scenefactory.h"
 #include "shadowmapcomponent.h"
+#include "modegameover.h"
+#include "PlayerManager.h"
 #include "lua.hpp"
 
 #include "tolua.h"
@@ -177,18 +179,43 @@ bool ModeGame::Initialize()
 bool ModeGame::Terminate()
 {
 	base::Terminate();
-	// キャラ
+
+	// キャラクターを終了
 	for(auto& chara : _chara)
 	{
-		chara->Terminate();
+		if(chara)
+		{
+			chara->Terminate();
+		}
 	}
 	_chara.clear();
+
+	// PlayerManagerのオブジェクトを削除
+	auto* playerManager = PlayerManager::GetInstance();
+	playerManager->ClearPlayer();
+
+	// EnemyManagerのオブジェクトを削除
+	auto* enemyManager = EnemyManager::GetInstance();
+	enemyManager->GetEnemies().clear();
+
+	// その他のオブジェクトを終了
 	for(auto& object : _object)
 	{
-		object->Terminate();
+		if(object)
+		{
+			object->Terminate();
+		}
 	}
 	_object.clear();
+
+	_cube.clear();
+	_map.reset();
+	_skySphere.reset();
+	_goal.reset();
+
 	delete _camera;
+	_camera = nullptr;
+
 	return true;
 }
 
@@ -356,6 +383,20 @@ bool ModeGame::Process()
 		}
 		LandCheck();
 
+		if(_goal && CharaToCharaCollision(player, _goal.get()))
+		{
+			if(ModeServer::GetInstance()->Get("gameover") == nullptr)
+			{
+				ModeServer::GetInstance()->Add(
+					new ModeGameOver(),
+					2,
+					"gameover");
+			}
+
+			// 現在のModeGameを削除予約
+			ModeServer::GetInstance()->Del(this);
+		}
+
 		// 移動中専用のアクション・カメラ情報更新
 		UpdateCheckAttackCollision();
 		PlayerCameraInfo();
@@ -483,6 +524,8 @@ bool ModeGame::Render()
 
 	SetUseShadowMap(0, -1);
 
+	_skySphere->Render();
+
 	DebugRender();// デバック描画処理
 
     // 敵のHP情報を画面に表示（生存している敵のみ）と生存カウント取得
@@ -516,27 +559,7 @@ bool ModeGame::Render()
 		}
 	}
 
-	// ゲームオーバー時の表示
-	if(_is_gameover)
-	{
-		// 中央付近に Game Over と倒した数と残り時間を表示
-		int cx = 300;
-		int cy = 200;
-		SetFontSize(64);
-		DrawFormatString(cx + 200, cy, GetColor(0, 0, 0), "GAME OVER");
-		SetFontSize(32);
-		// 倒した敵数は初期総数 - 現在生存数
-		int defeated = _enemy_count - alive_count;
-		if(defeated < 0)
-		{
-			defeated = 0;
-		}
-		DrawFormatString(cx + 200, cy + 100, GetColor(255, 0, 0), "敵を倒した数: %d", defeated);
-		// 操作説明
-		DrawFormatString(cx + 50, cy + 300, GetColor(255, 0, 0), "キーボード:Zまだはパッド:Aでタイトルへ");
-		// フォントサイズを戻す（他描画に影響しないように）
-		SetFontSize(16);
-	}
+	
 
 	return true;
 }

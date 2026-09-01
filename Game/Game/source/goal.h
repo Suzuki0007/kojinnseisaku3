@@ -16,6 +16,7 @@ public:
 	virtual void CommandAttack(IBattleReceiver* target) override {}
 	virtual bool IsExceutionAction() const override { return false; }
 
-
+protected:
+	bool _isReach{ false }; // ゴールに到達したか
 };
 

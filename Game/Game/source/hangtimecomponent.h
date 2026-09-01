@@ -3,11 +3,12 @@
 
 namespace air
 {
-	constexpr float AIR_TIME = 20.0f; // 滞空時間
+	constexpr float AIR_TIME = 100.0f; // 滞空時間
+	constexpr float DESCENT_SPEED = 0.5f; // 滞空中の下降速度
 }
 
 // 滞空時間コンポーネント
-class HangTimeComponent : public Component<CharaBase>
+class HangTimeComponent final : public Component<CharaBase>
 {
 public:
 	using Component::Component;

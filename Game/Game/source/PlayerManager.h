@@ -12,6 +12,7 @@ public:
 	void RegisterType();
 	void CreatePlayer(const std::string& type);
 	const std::vector<std::unique_ptr<PlayerBase>>& GetPlayer() { return GetAll(); }
+	void ClearPlayer() { Clear(); }
 
 private:
 	PlayerManager() = default;

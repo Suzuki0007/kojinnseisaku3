@@ -4,12 +4,14 @@
 namespace kick
 {
 	// 線
-	static constexpr int SPEED_LINE_COUNT = 5;// 線の本数
+	static constexpr int SPEED_LINE_COUNT = 20;// 線の本数
 	static constexpr float SPEED_LINE_LIFE = 1.5f; // 線の寿命
 	static constexpr float SPEED_LINE_LIFE_VAR = 0.05f; // 線の寿命のばらつき
 	static constexpr float SPEED_LINE_OFFSET_MAX = 8.0f; // 上下のオフセットの最大値
 	static constexpr float SPEED_LINE_LENGTH_MIN = 0.0f; // 線の長さの最小値
 	static constexpr float SPEED_LINE_LENGTH_MAX = 2000.0f; // 線の長さの最大値
+	static constexpr float SPEED_LINE_GROWTH_MIN = 0.8f;// 線の成長率の最小値
+	static constexpr float SPEED_LINE_GROWTH_MAX = 1.2f;// 線の成長率の最大値
 	static unsigned int SPEED_LINE_COLOR_R = 150;
 	static unsigned int SPEED_LINE_COLOR_G = 230;
 	static unsigned int SPEED_LINE_COLOR_B = 255;
@@ -39,6 +41,8 @@ namespace kick
 	static constexpr unsigned int SPARK_COLOR_R = 255;
 	static constexpr unsigned int SPARK_COLOR_G = 255;
 	static constexpr unsigned int SPARK_COLOR_B = 220;
+
+	static constexpr float FADE_OUT_TIME = 0.5f; // フェードアウトの時間
 }
 
 class KickEffect final : public EffectBase
@@ -56,6 +60,7 @@ public:
 	void SetUp(const Vec4& startpos, const Vec4& dir, float kickdistance) override;
 	void SetEffectPos(const Vec4& pos) override;
 
+	void EndAttack();
 	bool IsFinished() const;
 
 private:
@@ -65,6 +70,7 @@ private:
 	{
 		Vec4 offset;// 線のオフセット
 		float lenght;// 線の長さ
+		float growthRatio;// 線の成長率s
 		float life;// 線の寿命
 		float maxLife;// 線の最大寿命
 		unsigned int color;// 線の色
@@ -109,6 +115,7 @@ private:
 	void RenderSpark();// スパークの描画
 
 	static float CalcAlpha(float life, float maxLife);// 透明度の計算
+	float GetFadeAlpha() const;// フェードアウトの透明度の計算
 
 	virtual const char* GetCharaClassName() const override { return ""; }
 	virtual float GetSpeed() const override { return 0.0f; }
@@ -131,11 +138,14 @@ protected:
 	Vec4 _right {1.0f, 0.0f, 0.0f};
 	Vec4 _up{ 0.0f, 1.0f, 0.0f };
 	float _kickDistanceCache{ 0.0f };// キックの距離のキャッシュ
+	float _travelDistance{ 0.0f };// エフェクトの移動距離
+	float _fadeElapsedTime{ 0.0f };// フェードアウトの経過時間
 
 	float _elapsedTime{ 0.0f };// 経過時間
 	bool _ringSpawned{ false };// リングが生成されたかどうか
 	bool _sparkSpawned{ false };// スパークが生成されたかどうか
 	bool _started{ false };// エフェクトが開始されたかどうか
+	bool _ending{ false };// エフェクトが終了したかどうか
 
 };
 

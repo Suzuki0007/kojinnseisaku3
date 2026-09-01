@@ -101,6 +101,8 @@ public:
 	void SetLand(bool land);
 	bool IsAscending() const;
 
+	virtual void CancelAttackCube() {}
+
 protected:
 	int _attach_index;
 	float _total_time;
