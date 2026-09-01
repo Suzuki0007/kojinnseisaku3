@@ -515,6 +515,15 @@ bool ModeGame::UpdateCheckAttackCollision()
 					// ダメージ処理
 					enemy->Damage(attack.damage);
 
+					if(!enemy->IsAlive())
+					{
+						EffectManager::GetInstance()->CreateEffect
+						(
+							"BombEffect",
+							enemy->GetPos()
+						);
+					}
+
 
 					break; // 1回当たったら終了
 				}

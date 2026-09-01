@@ -1,33 +1,19 @@
 ﻿#pragma once
-#include "objectbase.h"
-#include "camera.h"
+#include "mapbase.h"
 
-class Map : public ObjectBase 
+class Map : public MapBase 
 {
-	typedef ObjectBase base;
+	using base = MapBase;
 public:
-	virtual bool Initialize();
-	virtual bool Terminate();
-	virtual bool Process();
-	virtual bool Render();
+	virtual bool Initialize() override;
+	virtual bool Terminate() override;
+	virtual bool Process() override;
+	virtual bool Render() override;
 
-	auto& GetHandleMap() { return _handle_map; }
-	auto GetHandleSkySphere() const { return _handle_sky_sphere; }
-	auto GetFrameMapCollision() const { return _frame_map_collision; }
-	auto GetHandleShadowMap() const { return _handle_shadow_map; }
 
-	void SetCamera(Camera* cam) override { _cam = cam; }
 
 protected:
-	Camera* _cam;
-	// マップ用
-	// しまって取り出すときにstd::mapで管理
-	int _handle_map;// std::map<マップ名, ハンドル>
-	int _handle_sky_sphere;
-	int _frame_map_collision;
 
-	// シャドウマップ用
-	int _handle_shadow_map;
 
 	// 地面のテクスチャ
 	int _ground_handle;

@@ -4,7 +4,7 @@
 #include "modeeffekseer.h"
 #include "modetitle.h"
 #include "scenefactory.h"
-
+#include "shadowmapcomponent.h"
 #include "lua.hpp"
 
 #include "tolua.h"
@@ -95,6 +95,8 @@ bool ModeGame::Initialize()
 
 	ObjectInitialize();	// オブジェクト初期化
 
+	_map->SetCamera(_camera);
+
 	// キャラ
 	for(auto& chara : _chara)
 	{
@@ -107,7 +109,6 @@ bool ModeGame::Initialize()
 		object->Initialize();
 	}
 
-	_map->SetCamera(_camera);
 	auto* player = GetPlayer();
 	player->SetCamera(_camera);
 
@@ -201,10 +202,10 @@ std::vector<std::unique_ptr<EnemyBase>>& ModeGame::GetEnemies()
 	return EnemyManager::GetInstance()->GetEnemies();
 }
 
-void ModeGame::OnChangeState(GameState state, int enemyId)
-{
-	ChangeState(state, enemyId);
-}
+//void ModeGame::OnChangeState(GameState state, int enemyId)
+//{
+//	ChangeState(state, enemyId);
+//}
 
 // 円同士の当たり判定
 bool ModeGame::IsHitCircle(CharaBase* c1, CharaBase* c2)
@@ -241,38 +242,38 @@ bool ModeGame::PlayerCameraInfo()
 	return true;
 }
 
-void ModeGame::ChangeState(GameState nextState, int enemyId)
-{
-	if(_gameState == GameState::Battle && nextState == GameState::World)
-	{
-		// バトル終了時の処理
-		if(_enemyIndexBattle >= 0 && _enemyIndexBattle < _enemyAliveList.size())
-		{
-			_enemyAliveList[_enemyIndexBattle] = false;
-			_enemy_count--;
-		}
-		_enemyIndexBattle = -1;
-	}
-	
-	if(nextState == GameState::World)
-	{
-		auto* player = GetPlayer();
-		if(player)
-		{
-			player->SetCamera(_camera);
-		}
-	}
-
-	_sceneBase = SceneFactory::CreateScene(nextState, enemyId);
-
-	if(_sceneBase)
-	{
-		_sceneBase->RegisterObserver(this);
-		_sceneBase->Initialize();
-	}
-
-	_gameState = nextState;
-}
+//void ModeGame::ChangeState(GameState nextState, int enemyId)
+//{
+//	if(_gameState == GameState::Battle && nextState == GameState::World)
+//	{
+//		// バトル終了時の処理
+//		if(_enemyIndexBattle >= 0 && _enemyIndexBattle < _enemyAliveList.size())
+//		{
+//			_enemyAliveList[_enemyIndexBattle] = false;
+//			_enemy_count--;
+//		}
+//		_enemyIndexBattle = -1;
+//	}
+//	
+//	if(nextState == GameState::World)
+//	{
+//		auto* player = GetPlayer();
+//		if(player)
+//		{
+//			player->SetCamera(_camera);
+//		}
+//	}
+//
+//	//_sceneBase = SceneFactory::CreateScene(nextState, enemyId);
+//
+//	//if(_sceneBase)
+//	//{
+//	//	_sceneBase->RegisterObserver(this);
+//	//	_sceneBase->Initialize();
+//	//}
+//
+//	_gameState = nextState;
+//}
 
 bool ModeGame::IsEnemyAliveFromList(int index) const
 {
@@ -306,8 +307,8 @@ bool ModeGame::Process()
 		return true; // ゲームオーバー中はこれ以降の処理を一切やらない
 	}
 
-	if(_gameState == GameState::World)
-	{
+	//if(_gameState == GameState::World)
+	//{
 		// 1. 敵の行動更新（ModeGame側の生存リストを正義にする！）
 		auto& enemies = GetEnemies();
 		for(size_t i = 0; i < enemies.size(); i++)
@@ -324,6 +325,14 @@ bool ModeGame::Process()
 		{
 			player->Process();
 		}
+
+		if(_camera && player)
+		{
+			const bool isAttacking = player->GetStatus() == CharaBase::STATUS::ATTACK;
+
+			_camera->SetLocked(!isAttacking);
+		}
+
 		for(auto& object : _object)
 		{
 			object->Process();
@@ -367,7 +376,7 @@ bool ModeGame::Process()
 			if(remaining < 0) remaining = 0;
 			if(_final_remaining_time < 0) _final_remaining_time = remaining;
 		}
-	}
+	//}
 	if(_camera)
 	{
 		_camera->Process();
@@ -376,6 +385,60 @@ bool ModeGame::Process()
 	DebugProcess();
 
 	return true;
+}
+
+void ModeGame::RenderShadowCaster()
+{
+	if(_map && _map->GetHandleMap() != -1)
+	{
+		MV1DrawModel(_map->GetHandleMap());
+	}
+
+
+	// プレイヤー・敵
+	RenderChara();
+
+	// キューブなどにも影を落とす場合
+	for(auto& object : _object)
+	{
+		if(object)
+		{
+			object->Render();
+		}
+	}
+}
+
+void ModeGame::RenderChara()
+{
+	// キャラを描画（生存しているもののみ）
+	auto& enemies = GetEnemies();
+	for(auto& chara : _chara)
+	{
+		size_t enemyIndex = -1;
+		for(size_t i = 0; i < enemies.size(); i++)
+		{
+			if(chara == enemies[i].get()) // ポインタの住所が一致するかチェック
+			{
+				enemyIndex = i; // 一致したら、その敵のインデックス（番号）を保存
+				break;
+			}
+		}
+		if(enemyIndex != -1)
+		{
+			if(!_enemyAliveList[enemyIndex] || !chara->IsAlive())
+			{
+				continue;
+			}
+		}
+		else
+		{
+			if(!chara->IsAlive())
+			{
+				continue;
+			}
+		}
+		chara->Render();
+	}
 }
 
 // 描画処理
@@ -388,47 +451,26 @@ bool ModeGame::Render()
 	SetCameraPositionAndTarget_UpVecY(VC::VecToDxLib(_camera->_v_pos), VC::VecToDxLib(_camera->_v_target));
 	SetCameraNearFar(_camera->_clip_near, _camera->_clip_far);
 
-	// キャラを描画（生存しているもののみ）
-	auto& enemies = GetEnemies();
-	for(auto& chara : _chara)
-	{
-		// 1. まず、このキャラが「敵（Enemy）」のリストに含まれているか探す
-		size_t enemyIndex = -1;
-		for(size_t i = 0; i < enemies.size(); i++)
-		{
-			if(chara == enemies[i].get()) // ポインタの住所が一致するかチェック
-			{
-				enemyIndex = i; // 一致したら、その敵のインデックス（番号）を保存
-				break;
-			}
-		}
-		if(enemyIndex != -1)
-		{
-			// このキャラは「敵」だった！
-			// ModeGameの生存メモを見て、すでに倒されているなら描画をスキップする
-			if(!_enemyAliveList[enemyIndex])
-			{
-				continue; //  ここで弾くことで、画面に映らなくなります！
-			}
-		}
-		else
-		{
-			// このキャラは「プレイヤー」や「NPC」だった！
-			// 敵ではないので、個別の死亡チェック（chara->IsAlive()等）だけでOK
-			if(!chara->IsAlive())
-			{
-				continue;
-			}
-		}
+	auto* shadowMap = _map->GetShadowMapComponent();
 
-		// 3. 生き残ったキャラだけがここでめでたく描画される
-		chara->Render(); // (または Draw() )
+	if(shadowMap && _camera)
+	{
+		shadowMap->Begin(*_camera);
+
+		RenderShadowCaster();
+
+		shadowMap->End();
 	}
 
-	// オブジェクトを描画
+	// 通常描画
+	RenderChara();
+
 	for(auto& object : _object)
 	{
-		object->Render();
+		if(object)
+		{
+			object->Render();
+		}
 	}
 
 	for(auto& effect : EffectManager::GetInstance()->GetEffects())
@@ -439,7 +481,7 @@ bool ModeGame::Render()
 		}
 	}
 
-	//_sceneBase->Render(); // ワールド中ならWorldScene、バトル中ならBattleSceneが描画される
+	SetUseShadowMap(0, -1);
 
 	DebugRender();// デバック描画処理
 

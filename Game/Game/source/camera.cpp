@@ -35,9 +35,9 @@ bool Camera::Initialize()
 	SetupCamera_Perspective(_fovY);
 
 	// 初期状態の角度と距離を計算
-	float sx = _v_pos.x - _v_target.x;
-	float sy = _v_pos.y - _v_target.y;
-	float sz = _v_pos.z - _v_target.z;
+	float sx = _v_pos.x + _v_target.x;
+	float sy = _v_pos.y + _v_target.y;
+	float sz = _v_pos.z + _v_target.z;
 	_angle = atan2(sz, sx);
 	_dist = sqrt(sz * sz + sx * sx);
 
@@ -75,8 +75,15 @@ bool Camera::Process()
 {
 	InputDevice& input = InputLocator::Get();
 
-	float rx = input.GetRightStickX();
-	float ry = input.GetRightStickY();
+	float rx = 0.0f;
+	float ry = 0.0f;
+
+	if(_isLock)
+	{
+		// カメラがロックされていない場合、右スティックの入力を取得
+		rx = input.GetRightStickX();
+		ry = input.GetRightStickY();
+	}
 
 	// 1. 右スティックによるカメラ角度の変更（カメラクラスの責務）
 	if(rx < -analogMin) { _angle += rotateSpeed; } // 左回転
@@ -127,9 +134,9 @@ void Camera::DrawDebugFov(float length) const
 			float s = std::sin(rad);
 			return v::VGet
 			(
-				v.x * c + v.z * s,
+				v.x * c - v.z * s,
 				v.y,
-				-v.x * s + v.z * c
+				-v.x * s - v.z * c
 			);
 		};
 
@@ -140,9 +147,9 @@ void Camera::DrawDebugFov(float length) const
 	Vec4 rightEnd = v::VAdd(_v_pos, v::VScale(rightDir, length));
 	Vec4 centerEnd = v::VAdd(_v_pos, v::VScale(forward, length));
 
-	VC::DrawLine3D(_v_pos, leftEnd, colorEdge);
+	/*VC::DrawLine3D(_v_pos, leftEnd, colorEdge);
 	VC::DrawLine3D(_v_pos, rightEnd, colorEdge);
-	VC::DrawLine3D(_v_pos, centerEnd, colorCenter);
+	VC::DrawLine3D(_v_pos, centerEnd, colorCenter);*/
 
 	Vec4 prevPoint = leftEnd;
 	for(int i = 1; i <= segments; ++i)

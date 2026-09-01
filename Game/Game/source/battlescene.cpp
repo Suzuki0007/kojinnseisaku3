@@ -68,15 +68,15 @@ void BattleScene::Update()
 
 	if(input.IsTrigger(InputButton::SceneDebug))
 	{
-		if(_observer)
-		{
-			_observer->OnChangeState(GameState::World, _targetEnemyId);
-			auto& player = PlayerManager::GetInstance()->GetPlayer();
-			for(auto& p : player)
-			{
-				p->SetCanControl(true);
-			}
-		}
+		//if(_observer)
+		//{
+		//	_observer->OnChangeState(GameState::World, _targetEnemyId);
+		//	auto& player = PlayerManager::GetInstance()->GetPlayer();
+		//	for(auto& p : player)
+		//	{
+		//		p->SetCanControl(true);
+		//	}
+		//}
 
 
 		return;
@@ -105,15 +105,15 @@ void BattleScene::Update()
 		if(input.IsTrigger(InputButton::Decide))
 		{
 
-			_observer->OnChangeState(GameState::World, _targetEnemyId);
-			auto& player = PlayerManager::GetInstance()->GetPlayer();
-			for(auto& p : player)
-			{
-				p->SetCanControl(true);
-				p->SetPos(p->GetOldPos());
-				p->SetDir(p->GetOldDir());
-				p->SetStatus(CharaBase::STATUS::WAIT);
-			}
+			//_observer->OnChangeState(GameState::World, _targetEnemyId);
+			//auto& player = PlayerManager::GetInstance()->GetPlayer();
+			//for(auto& p : player)
+			//{
+			//	p->SetCanControl(true);
+			//	p->SetPos(p->GetOldPos());
+			//	p->SetDir(p->GetOldDir());
+			//	p->SetStatus(CharaBase::STATUS::WAIT);
+			//}
 			return;
 		}
 	}
@@ -221,10 +221,10 @@ void BattleScene::OnCommandSelected(BattleCommandMenu::BattleCommand command)
 		}
 		break;
 	case BattleCommandMenu::BattleCommand::End:
-		if(_observer)
-		{
-			_observer->OnChangeState(GameState::World, _targetEnemyId);
-		}
+		//if(_observer)
+		//{
+		//	_observer->OnChangeState(GameState::World, _targetEnemyId);
+		//}
 		break;
 	default:
 		break;

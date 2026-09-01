@@ -17,6 +17,9 @@ public:
     // 外部からターゲット位置を設定できるように追加
     void SetTargetPosition(const Vec4& t) { _v_target = t; _height_y = t.y; }
 
+	void SetLocked(bool locked) { _isLock = locked; }
+	bool IsLocked() const { return _isLock; }
+
 	// 外部から角度を取得・設定できるように追加
 	float GetAngle() const { return _angle; }
 	void SetAngle(float angle) { _angle = angle; }
@@ -43,5 +46,7 @@ protected:
 	float _height_y; // ターゲットの注視点の高さ
 	float _pitch{ 0.3f };    // カメラの上下角度（ラジアン）
 	float _horizontalDist{ 0.0f }; // カメラとターゲットの水平距離
+
+	bool _isLock{ true }; // カメラのロック状態
 };
 

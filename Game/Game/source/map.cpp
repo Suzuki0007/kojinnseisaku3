@@ -57,9 +57,6 @@ bool Map::Initialize()
 	// コリジョンのフレームを描画しない設定
 	MV1SetFrameVisible(_handle_map, _frame_map_collision, FALSE);
 
-	// シャドウマップの生成
-	_handle_shadow_map = MakeShadowMap(2048, 2048);
-
 	return true;
 }
 
@@ -144,63 +141,6 @@ bool Map::Render()
 	SetGlobalAmbientLight(GetColorF(0.f, 0.f, 0.f, 0.f));
 	ChangeLightTypePoint(VAdd(_pos, VGet(0.50f, 0)), 1000.f, 0.f, 0.005f, 0.f);
 #endif
-
-	// シャドウマップが想定するライトの方向もセット
-	SetShadowMapLightDirection(_handle_shadow_map, lightdir);
-
-	// シャドウマップに描画する範囲を設定
-	// カメラの注視点を中心にする
-	float lenght = 800.f;
-	SetShadowMapDrawArea
-	(
-		_handle_shadow_map,
-		VC::VecToDxLib
-		(
-			v::VAdd
-			(
-				_cam->_v_target,
-				v::VGet(-lenght, -1.0f, -lenght)
-			)
-		),
-		VC::VecToDxLib
-		(
-			v::VAdd
-			(
-				_cam->_v_target,
-				v::VGet
-				(
-					lenght,
-					lenght,
-					lenght
-				)
-			)
-		)
-	);
-
-	// 2回まわして、path = 0: シャドウマップへの描画、path = 1: モデルの：描画
-	for(int path = 0; path < 2; path++)
-	{
-		if(path == 0)
-		{
-			// シャドウマップへの描画の準備
-			ShadowMap_DrawSetup(_handle_shadow_map);
-		}
-		else if(path == 1)
-		{
-			// シャドウマップへの描画終了
-			ShadowMap_DrawEnd();
-			// 描画に使用するシャドウマップを設定
-			SetUseShadowMap(0, _handle_shadow_map);
-		}
-
-		// マップモデルを描画
-		{
-			MV1DrawModel(_handle_map);
-			MV1DrawModel(_handle_sky_sphere);
-		}
-	}
-	SetUseShadowMap(0, -1); // シャドウマップの解除
-
 	if(_ground_handle == -1)
 	{
 		return false;

@@ -70,4 +70,20 @@ namespace VC
 	{
 		return DxLibToVec(ConvWorldPosToScreenPos(VecToDxLib(worldPos)));
 	}
+
+	inline int SetShadowMapLightDirection(int handle, Vec4 direction)
+	{
+		return ::SetShadowMapLightDirection(handle, VecToDxLib(direction));
+	}
+
+	inline int DrawBillboard(const Vec4& pos,
+		const float cx,
+		const float cy,
+		const float Size,
+		const float Angle,
+		const int GrHandle,
+		const int TransFlag)
+	{
+		return ::DrawBillboard3D(VecToDxLib(pos), cx, cy, Size, Angle, GrHandle, TransFlag);
+	}
 }

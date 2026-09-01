@@ -11,13 +11,13 @@
 #include "PlayerManager.h"
 #include "enemymanager.h"
 #include "effectmanager.h"
-#include "scenebase.h"
-#include "gameobserver.h"
+//#include "scenebase.h"
+//#include "gameobserver.h"
 
 #define CUBE_COUNT 6
 #define ENEMY_COUNT 6
 
-class ModeGame : public ModeBase, public GameObserver
+class ModeGame : public ModeBase
 {
 	typedef ModeBase base;
 public:
@@ -69,9 +69,14 @@ public:
 	// オブジェクト関数
 	bool ObjectInitialize();
 
-	virtual void OnChangeState(GameState state, int enemyId) override;
+	// 描画関数
+	void RenderShadowCaster();
+	void RenderChara();
+	void RenderNormalScene();
 
-	void ChangeState(GameState nextState, int enemyId);
+	//virtual void OnChangeState(GameState state, int enemyId) override;
+
+	//void ChangeState(GameState nextState, int enemyId);
 
 	std::vector<std::unique_ptr<EnemyBase>>& GetEnemies();
 
@@ -90,7 +95,7 @@ protected:
 	std::vector<CharaBase*> _chara;
 	std::vector<std::shared_ptr<ObjectBase>> _object;
 	// マップ
-	std::shared_ptr<Map> _map;
+	std::shared_ptr<MapBase> _map;
 	// キューブ
 	std::vector<std::shared_ptr<Cube>> _cube;
 	// デバッグ用
@@ -110,8 +115,8 @@ protected:
 	// 全滅または時間切れになったときの残り時間を保持。未設定は -1
 	int _final_remaining_time;
 
-	std::unique_ptr<SceneBase> _sceneBase;
-	GameState _gameState{ GameState::World };
+	//std::unique_ptr<SceneBase> _sceneBase;
+	//GameState _gameState{ GameState::World };
 	int _enemyIndexBattle{ -1 };// 現在戦っている敵の配列番号
 
 	// lua用

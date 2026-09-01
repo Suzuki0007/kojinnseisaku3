@@ -28,8 +28,12 @@
     <ClInclude Include="source\battleaction.h" />
     <ClInclude Include="source\battlecommandmenu.h" />
     <ClInclude Include="source\battlereceiver.h" />
-    <ClInclude Include="source\battlescene.h" />
+    <ClInclude Include="source\battlescene.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="source\battlestate.h" />
+    <ClInclude Include="source\bombeffect.h" />
     <ClInclude Include="source\camera.h" />
     <ClInclude Include="source\charabase.h" />
     <ClInclude Include="source\cube.h" />
@@ -44,13 +48,18 @@
     <ClInclude Include="source\enemyfactory.h" />
     <ClInclude Include="source\enemymanager.h" />
     <ClInclude Include="source\enemytargetprovider.h" />
-    <ClInclude Include="source\gameobserver.h" />
+    <ClInclude Include="source\gameobserver.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="source\goal.h" />
     <ClInclude Include="source\healthcomponent.h" />
     <ClInclude Include="source\kickeffect.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="source\rollcomponent.h" />
+    <ClInclude Include="source\stagedefinition.h" />
     <ClInclude Include="source\targetprovider.h" />
     <ClInclude Include="source\jumpcomponet.h" />
     <ClInclude Include="source\luabase.h" />
@@ -75,8 +84,14 @@
     <ClInclude Include="source\playerfactory.h" />
     <ClInclude Include="source\PlayerManager.h" />
     <ClInclude Include="source\resourcepath.h" />
-    <ClInclude Include="source\scenebase.h" />
-    <ClInclude Include="source\scenefactory.h" />
+    <ClInclude Include="source\scenebase.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
+    <ClInclude Include="source\scenefactory.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
     <ClInclude Include="source\shadowmapcomponent.h" />
     <ClInclude Include="source\skyspherecomponent.h" />
     <ClInclude Include="source\speedcomponent.h" />
@@ -86,7 +101,10 @@
     <ClInclude Include="source\targetstrategybase.h" />
     <ClInclude Include="source\tolua_cmd\luaglue_cmd.h" />
     <ClInclude Include="source\waitstate.h" />
-    <ClInclude Include="source\worldscene.h" />
+    <ClInclude Include="source\worldscene.h">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClInclude>
   </ItemGroup>
   <ItemGroup>
     <ClCompile Include="source\alivestate.cpp" />
@@ -96,7 +114,11 @@
     <ClCompile Include="source\attackaction.cpp" />
     <ClCompile Include="source\attackcomponent.cpp" />
     <ClCompile Include="source\battlecommandmenu.cpp" />
-    <ClCompile Include="source\battlescene.cpp" />
+    <ClCompile Include="source\battlescene.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="source\bombeffect.cpp" />
     <ClCompile Include="source\camera.cpp" />
     <ClCompile Include="source\charabase.cpp" />
     <ClCompile Include="source\cube.cpp" />
@@ -110,7 +132,11 @@
     <ClCompile Include="source\enemyfactory.cpp" />
     <ClCompile Include="source\enemymanager.cpp" />
     <ClCompile Include="source\enemytargetprovider.cpp" />
-    <ClCompile Include="source\gameobserver.cpp" />
+    <ClCompile Include="source\gameobserver.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
+    <ClCompile Include="source\goal.cpp" />
     <ClCompile Include="source\healthcomponent.cpp" />
     <ClCompile Include="source\jumpcomponet.cpp" />
     <ClCompile Include="source\kickeffect.cpp">
@@ -143,7 +169,10 @@
     <ClCompile Include="source\playerfactory.cpp" />
     <ClCompile Include="source\PlayerManager.cpp" />
     <ClCompile Include="source\rollcomponent.cpp" />
-    <ClCompile Include="source\scenefactory.cpp" />
+    <ClCompile Include="source\scenefactory.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
     <ClCompile Include="source\shadowmapcomponent.cpp" />
     <ClCompile Include="source\skyspherecomponent.cpp" />
     <ClCompile Include="source\statemanager.cpp" />
@@ -153,7 +182,10 @@
       <PrecompiledHeader Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">NotUsing</PrecompiledHeader>
     </ClCompile>
     <ClCompile Include="source\waitstate.cpp" />
-    <ClCompile Include="source\worldscene.cpp" />
+    <ClCompile Include="source\worldscene.cpp">
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
+    </ClCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

@@ -329,7 +329,7 @@ bool Player::Render()
 		_cam->DrawDebugFov();
 	}
 
-	DrawFormatString(10, 10, GetColor(255, 255, 255), "Player Pos: (%.2f, %.2f, %.2f)", _pos.x, _pos.y, _pos.z);
+	//DrawFormatString(10, 10, GetColor(255, 255, 255), "Player Pos: (%.2f, %.2f, %.2f)", _pos.x, _pos.y, _pos.z);
 
     return true;
 

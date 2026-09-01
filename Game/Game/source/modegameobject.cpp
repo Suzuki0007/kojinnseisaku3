@@ -62,7 +62,7 @@ bool ModeGame::ObjectInitialize()
 	effectm->RegisterType();
 
 
-	ChangeState(GameState::World, -1);
+	//ChangeState(GameState::World, -1);
 
 	return true;
 }

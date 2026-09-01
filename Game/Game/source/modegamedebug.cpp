@@ -1,6 +1,7 @@
 ﻿#include "pch.h"
 #include "modegame.h"
 #include "menuitembase.h"
+#include "shadowmapcomponent.h"
 
 // デバックの初期化
 bool ModeGame::DebugInitialize()
@@ -116,7 +117,19 @@ bool ModeGame::DebugRender()
 	// シャドウマップの表示
 	if(_d_view_shadow_map)
 	{
-		TestDrawShadowMap(_map->GetHandleShadowMap(), 0, 0, 512, 512);
+		auto* shadowMap =
+			_map->GetShadowMapComponent();
+
+		if(shadowMap)
+		{
+			TestDrawShadowMap(
+				shadowMap->GetShadowMapHandle(),
+				0,
+				0,
+				512,
+				512
+			);
+		}
 	}
 
 	if(_d_view_camera_info)

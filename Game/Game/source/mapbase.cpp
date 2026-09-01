@@ -8,6 +8,10 @@ bool MapBase::Initialize()
 	{
 		return false;
 	}
+
+	_shadowMapComponent = AddComponent<ShadowMapComponent>();
+	_comOwner.Initialize();
+
 	return true;
 }
 
