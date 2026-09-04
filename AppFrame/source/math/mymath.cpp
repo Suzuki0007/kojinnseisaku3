@@ -1,10 +1,62 @@
 ﻿#include "pch.h"
 #include "mymath.h"
 
+namespace mymath
+{
+	bool LineIntersectAABB(
+		const Vec4& from,
+		const Vec4& to,
+		const AABB& box)
+	{
+		Vec4 dir = v::VSub(to, from);
+
+		float tmin = 0.0f;
+		float tmax = 1.0f;
+
+		auto clip = [ & ] (float dirComp, float fromComp,
+			float boxMin, float boxMax) -> bool
+			{
+				if(std::abs(dirComp) <
+					std::numeric_limits<float>::epsilon())
+				{
+					return fromComp >= boxMin &&
+						fromComp <= boxMax;
+				}
+
+				float invDir = 1.0f / dirComp;
+
+				float t1 = ( boxMin - fromComp ) * invDir;
+				float t2 = ( boxMax - fromComp ) * invDir;
+
+				if(t1 > t2)
+					std::swap(t1, t2);
+
+				if(t1 > tmin)
+					tmin = t1;
+
+				if(t2 < tmax)
+					tmax = t2;
+
+				return tmin <= tmax;
+			};
+
+		if(!clip(dir.x, from.x, box.min.x, box.max.x))
+			return false;
+
+		if(!clip(dir.y, from.y, box.min.y, box.max.y))
+			return false;
+
+		if(!clip(dir.z, from.z, box.min.z, box.max.z))
+			return false;
+
+		return true;
+	}
+}
+
 namespace easing
 {
 	// イージング
-// 常に加速度が一定で緩急のないイージング
+	// 常に加速度が一定で緩急のないイージング
 	float EasingLinear(float cnt, float start, float end, float frames)
 	{
 		return ( end - start ) * cnt / frames + start;
@@ -124,7 +176,7 @@ namespace easing
 	}
 
 	// サイン波を利用したイージング
-	float EasingOutSine(float cnt, float start, float end, float frames)
+	float EasingOutSine(float cnt, float frames, float start, float end)
 	{
 		return static_cast<float>(( end - start ) * sin(cnt / frames * PIOver2) + start);
 	}
@@ -230,13 +282,13 @@ namespace easing
 		return static_cast<float>(amplitude * pow(2.0, -10 * cnt) * sin(( cnt * frames - shift ) * TWO_PI / period) * 0.5f + end);
 	}
 
-	// ボールが跳ね返るようなイージング（加速）
+	//ボールが跳ね返るようなイージング（加速）
 	float EasingInBounce(float cnt, float start, float end, float frames)
 	{
 		return end - EasingOutBounce(frames - cnt, 0, end - start, frames);
 	}
 
-	// ボールが跳ね返るようなイージング（減速）
+	//ボールが跳ね返るようなイージング（減速）
 	float EasingOutBounce(float cnt, float start, float end, float frames)
 	{
 		float change = end - start;
@@ -295,6 +347,7 @@ namespace easing
 		}
 	}
 
+	// スムーズステップイージング
 	float EasingSmoothStep(float cnt, float frames, float start, float end)
 	{
 		if(frames <= 0.0f)
@@ -313,7 +366,7 @@ namespace easing
 			t = 1.0f;
 		}
 
-		// SmoothStep
+		// SmoothStep	
 		t = t * t * ( 3.0f - 2.0f * t );
 
 		return start + ( end - start ) * t;

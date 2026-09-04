@@ -8,7 +8,7 @@ namespace attack
 	constexpr float APPROACH_RANGE = 0.0f;      // 近づく距離の閾値
 	constexpr float APPROACH_EPSILON = 30.0f;   // 近づく距離の許容誤差
 	constexpr float GROUND_APPROACH_SPEED = 30.0f;// 攻撃対象に近づく速度
-	constexpr float AIR_APPROACH_SPEED = 30.0f;// 攻撃対象に近づく速度
+	constexpr float AIR_APPROACH_SPEED = 50.0f;// 攻撃対象に近づく速度
 	constexpr float GROUND_FORWARD_SPEED = 5.0f;// 攻撃アニメーション中に前進する速度
 	constexpr float AIR_FORWARD_SPEED = 8.0f;// 攻撃アニメーション中に前進する速度
 	constexpr float FORWARD_MOVE_ANIM_RATIO = 0.5f; // 攻撃アニメーションの再生時間に対する前進する時間の割合
@@ -23,7 +23,7 @@ namespace attack
 
 	// 攻撃の位置
 	constexpr float BACK_POS_OFFSET = 50.0f; // 攻撃エフェクトの位置の後方
-	constexpr float BACK_POS_HEIGHT = 50.0f; // 攻撃エフェクトの位置の高さ
+	constexpr float BACK_POS_HEIGHT = 100.0f; // 攻撃エフェクトの位置の高さ
 }
 
 class AttackComponent final : public Component<CharaBase>

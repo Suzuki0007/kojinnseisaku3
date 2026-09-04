@@ -65,6 +65,19 @@ bool ModeGame::Initialize()
 		return false;
 	}
 
+	_sceneScreenHandle = MakeScreen(
+		ApplicationMain::GetInstance()->DispSizeW(),
+		ApplicationMain::GetInstance()->DispSizeH(),
+		TRUE
+	);
+
+	if(_sceneScreenHandle == -1)
+	{
+		return false;
+	}
+
+	_distortionPixelShaderHandle = LoadPixelShader("distortion.cso");
+
 	// luaの初期化
 	_L = luaL_newstate();
 	_luaL_openlibs(_L);
@@ -134,7 +147,7 @@ bool ModeGame::Initialize()
 	std::vector<Vec4> enemy_positions =
 	{
 		v::VGet(-1350.0f, 400.0f, -1600.0f),
-		v::VGet(650.0f,0.0f, 1500.0f),
+		v::VGet(650.0f,400.0f, 1500.0f),
 		v::VGet(1100.0f, 0.0f, 150.0f),
 		v::VGet(-1200.0f,100.0f, 1700.0f),
 		v::VGet(150.0f, 0.0f, -3700.0f),
@@ -179,6 +192,13 @@ bool ModeGame::Initialize()
 bool ModeGame::Terminate()
 {
 	base::Terminate();
+
+	if(_sceneScreenHandle != -1)
+	{
+		DeleteGraph(_sceneScreenHandle);
+		_sceneScreenHandle = -1;
+	}
+
 
 	// キャラクターを終了
 	for(auto& chara : _chara)
@@ -257,50 +277,66 @@ bool ModeGame::IsHitCircle(CharaBase* c1, CharaBase* c2)
 // プレイヤーのカメラ情報表示
 bool ModeGame::PlayerCameraInfo()
 {
-	// カメラの位置/視点の移動を、プレイヤーの移動量に追従する
 	auto* player = GetPlayer();
-	Vec4 playermove = v::VSub(player->GetPos(), player->GetOldPos());
-	// 水平移動は従来通り位置を移す
-	_camera->_v_pos = v::VAdd(_camera->_v_pos, v::VGet(playermove.x, 0.0f, playermove.z));
-	// 注視点はプレイヤーの現在位置を基準に高さも含めて追従させる
-	Vec4 player_target = player->GetPos();
-	player_target.y += 60.0f; // プレイヤーの目線高さなどのオフセット
-	_camera->SetTargetPosition(player_target);
+
+	if(!player || !_camera)
+	{
+		return false;
+	}
+
+	bool isAttacking = player->GetStatus() == CharaBase::STATUS::ATTACK;
+
+	float deltaTime = TimeManager::GetInstance()->GetDeltaTime();
+
+	// 攻撃開始時のカメラ注視点を保存
+	if(isAttacking && !_wasCameraAttack)
+	{
+		_cameraAttackTime = 0.0f;
+		_cameraAttackStartTarget = _camera->_v_target;
+	}
+
+	Vec4 playerTarget = player->GetPos();
+	playerTarget.y += camera::PLAYER_TARGET;
+
+	if(isAttacking)
+	{
+		_cameraAttackTime += deltaTime;
+
+		// 攻撃開始から1秒かけて戻す
+		float progress = _cameraAttackTime / camera::CAMERA_ATTACK_TIME;
+
+		if(progress > 1.0f)
+		{
+			progress = 1.0f;
+		}
+
+		// 早めに移動し、最後はゆっくり定位置へ近づく
+		const float easedProgress =
+			1.0f - (1.0f - progress) * (1.0f - progress) * (1.0f - progress);
+
+		const Vec4 targetDelta =
+			v::VSub(playerTarget, _cameraAttackStartTarget);
+
+		const Vec4 smoothedTarget =
+			v::VAdd(
+				_cameraAttackStartTarget,
+				v::VScale(targetDelta, easedProgress)
+			);
+
+		_camera->SetTargetPosition(smoothedTarget);
+	}
+	else
+	{
+		_cameraAttackTime = 0.0f;
+
+		// 攻撃していないときは通常位置へ追従
+		_camera->SetTargetPosition(playerTarget);
+	}
+
+	_wasCameraAttack = isAttacking;
+
 	return true;
 }
-
-//void ModeGame::ChangeState(GameState nextState, int enemyId)
-//{
-//	if(_gameState == GameState::Battle && nextState == GameState::World)
-//	{
-//		// バトル終了時の処理
-//		if(_enemyIndexBattle >= 0 && _enemyIndexBattle < _enemyAliveList.size())
-//		{
-//			_enemyAliveList[_enemyIndexBattle] = false;
-//			_enemy_count--;
-//		}
-//		_enemyIndexBattle = -1;
-//	}
-//	
-//	if(nextState == GameState::World)
-//	{
-//		auto* player = GetPlayer();
-//		if(player)
-//		{
-//			player->SetCamera(_camera);
-//		}
-//	}
-//
-//	//_sceneBase = SceneFactory::CreateScene(nextState, enemyId);
-//
-//	//if(_sceneBase)
-//	//{
-//	//	_sceneBase->RegisterObserver(this);
-//	//	_sceneBase->Initialize();
-//	//}
-//
-//	_gameState = nextState;
-//}
 
 bool ModeGame::IsEnemyAliveFromList(int index) const
 {
@@ -314,7 +350,7 @@ bool ModeGame::IsEnemyAliveFromList(int index) const
 // 計算処理
 bool ModeGame::Process()
 {
-	float deltaTime = 1.0f; // 1フレームの時間を秒単位で計算
+	float deltaTime = 1.0f; // 1フレームの時間
 	AnimationManager::GetInstance()->Update(deltaTime);
 
 	EffekseerManager::GetInstance()->Update();
@@ -332,6 +368,16 @@ bool ModeGame::Process()
 			ModeServer::GetInstance()->Del(this);
 		}
 		return true; // ゲームオーバー中はこれ以降の処理を一切やらない
+	}
+
+	// ヒットストップ更新
+	if(_hitStopManager)
+	{
+		_hitStopManager->Update();
+		if(_hitStopManager->IsStopping())
+		{
+			return true; // ヒットストップ中はこれ以降の処理を一切やらない
+		}
 	}
 
 	//if(_gameState == GameState::World)
@@ -353,11 +399,33 @@ bool ModeGame::Process()
 			player->Process();
 		}
 
-		if(_camera && player)
+		if(player)
 		{
-			const bool isAttacking = player->GetStatus() == CharaBase::STATUS::ATTACK;
+			const bool isAttacking =
+				player->GetStatus() == CharaBase::STATUS::ATTACK;
 
-			_camera->SetLocked(!isAttacking);
+			Vec4 playerMove =
+				v::VSub(
+					player->GetPos(),
+					player->GetOldPos()
+				);
+
+			const bool isMoving =
+				playerMove.x != 0.0f ||
+				playerMove.y != 0.0f ||
+				playerMove.z != 0.0f;
+
+			const bool isAttackMoving =
+				isAttacking && isMoving;
+
+			if(isAttackMoving)
+			{
+				_screenMotionBlur.Start();
+			}
+			else
+			{
+				_screenMotionBlur.Stop();
+			}
 		}
 
 		for(auto& object : _object)
@@ -421,6 +489,12 @@ bool ModeGame::Process()
 	if(_camera)
 	{
 		_camera->Process();
+
+		if(_cameraShakeManager)
+		{
+			_cameraShakeManager->Update();
+			_camera->ApplyShakeOffset(_cameraShakeManager->GetOffset());
+		}
 	}
 
 	DebugProcess();
@@ -482,16 +556,8 @@ void ModeGame::RenderChara()
 	}
 }
 
-// 描画処理
-bool ModeGame::Render()
+void ModeGame::RenderNormalScene()
 {
-	base::Render();
-
-
-	// カメラ設定更新
-	SetCameraPositionAndTarget_UpVecY(VC::VecToDxLib(_camera->_v_pos), VC::VecToDxLib(_camera->_v_target));
-	SetCameraNearFar(_camera->_clip_near, _camera->_clip_far);
-
 	auto* shadowMap = _map->GetShadowMapComponent();
 
 	if(shadowMap && _camera)
@@ -502,6 +568,17 @@ bool ModeGame::Render()
 
 		shadowMap->End();
 	}
+
+	// シャドウマップ描画後に通常カメラを再設定する
+	SetCameraPositionAndTarget_UpVecY(
+		VC::VecToDxLib(_camera->_v_pos),
+		VC::VecToDxLib(_camera->_v_target)
+	);
+
+	SetCameraNearFar(
+		_camera->_clip_near,
+		_camera->_clip_far
+	);
 
 	// 通常描画
 	RenderChara();
@@ -525,8 +602,136 @@ bool ModeGame::Render()
 	SetUseShadowMap(0, -1);
 
 	_skySphere->Render();
+}
+
+void DrawGraphUseMotionBlurShader(
+	const int x,
+	const int y,
+	const int textureHandle,
+	const int pixelShaderHandle
+)
+{
+	std::array<VERTEX2DSHADER, 4> vertices{};
+
+	for(auto& vertex : vertices)
+	{
+		vertex.rhw = 1.0f;
+		vertex.dif = GetColorU8(255, 255, 255, 255);
+		vertex.spc = GetColorU8(0, 0, 0, 0);
+	}
+
+	int graphWidth = 0;
+	int graphHeight = 0;
+
+	GetGraphSize(
+		textureHandle,
+		&graphWidth,
+		&graphHeight
+	);
+
+	const float left =
+		static_cast<float>(x);
+
+	const float top =
+		static_cast<float>(y);
+
+	const float right =
+		left + graphWidth;
+
+	const float bottom =
+		top + graphHeight;
+
+	// 左上
+	vertices[0].pos = { left, top, 0.0f };
+	vertices[0].u = 0.0f;
+	vertices[0].v = 0.0f;
+	vertices[0].su = 0.0f;
+	vertices[0].sv = 0.0f;
+
+	// 右上
+	vertices[1].pos = { right, top, 0.0f };
+	vertices[1].u = 1.0f;
+	vertices[1].v = 0.0f;
+	vertices[1].su = 1.0f;
+	vertices[1].sv = 0.0f;
+
+	// 左下
+	vertices[2].pos = { left, bottom, 0.0f };
+	vertices[2].u = 0.0f;
+	vertices[2].v = 1.0f;
+	vertices[2].su = 0.0f;
+	vertices[2].sv = 1.0f;
+
+	// 右下
+	vertices[3].pos = { right, bottom, 0.0f };
+	vertices[3].u = 1.0f;
+	vertices[3].v = 1.0f;
+	vertices[3].su = 1.0f;
+	vertices[3].sv = 1.0f;
+
+	unsigned short indices[6] =
+	{
+		0, 1, 2,
+		2, 1, 3
+	};
+
+	SetUseTextureToShader(0, textureHandle);
+	SetUsePixelShader(pixelShaderHandle);
+
+	DrawPolygonIndexed2DToShader(
+		vertices.data(),
+		static_cast<int>(vertices.size()),
+		indices,
+		2
+	);
+}
+
+// 描画処理
+bool ModeGame::Render()
+{
+	base::Render();
+
+
+	// 画面テクスチャへ描画
+	SetDrawScreen(_sceneScreenHandle);
+	ClearDrawScreen();
+
+	RenderNormalScene();
 
 	DebugRender();// デバック描画処理
+
+	// バックバッファへ戻す
+	SetDrawScreen(DX_SCREEN_BACK);
+
+	if(_screenMotionBlur.IsActive())
+	{
+		DrawGraphUseMotionBlurShader(
+			0,
+			0,
+			_sceneScreenHandle,
+			_distortionPixelShaderHandle
+		);
+	}
+	else
+	{
+		DrawGraph(
+			0,
+			0,
+			_sceneScreenHandle,
+			TRUE
+		);
+	}
+
+	SetUsePixelShader(-1);
+	SetUseTextureToShader(0, -1);
+
+	DrawFormatString(
+		10,
+		200,
+		GetColor(0, 0, 0),
+		"Shader Handle: %d",
+		_distortionPixelShaderHandle
+	);
 
     // 敵のHP情報を画面に表示（生存している敵のみ）と生存カウント取得
     // フォントサイズを小さくして表示する

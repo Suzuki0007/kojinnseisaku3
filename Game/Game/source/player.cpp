@@ -6,6 +6,11 @@
 #include "rollcomponent.h"
 #include "dashcomponent.h"
 
+namespace
+{
+	constexpr float MAX_ROTATE_ANGLE = 0.15f; // 回転できる最大角度
+}
+
 // プレイヤーの移動
 bool Player::PlayerMove(Vec4 v)
 {
@@ -30,7 +35,7 @@ bool Player::Initialize()
 	_collision_r = 30.0f;
 	_collision_weight = 20.0f;
 	_cam = nullptr;
-	_mv_speed = 12.0f;
+	_mv_speed = 20.0f;
 
 	_air_control = 1.0f;
 	_battleSpeed = 5.0f;
@@ -197,7 +202,8 @@ void Player::ExcecuteMovement(const Vec4& v, CharaBase::STATUS oldStatus)
 				{
 					_pos.x += v.x * _air_control;
 					_pos.z += v.z * _air_control;
-					_dir = v;
+					
+					RotateToward(v, MAX_ROTATE_ANGLE);
 				}
 			}
 		}
@@ -212,7 +218,7 @@ void Player::ExcecuteMovement(const Vec4& v, CharaBase::STATUS oldStatus)
 			{
 				if(v::VSize(v) > 0.0f && _status != STATUS::ATTACK)
 				{
-					_dir = v;
+					RotateToward(v, MAX_ROTATE_ANGLE);
 					_status = STATUS::WALK;
 					PlayerMove(v);
 				}
@@ -240,6 +246,7 @@ void Player::ExcecuteMovement(const Vec4& v, CharaBase::STATUS oldStatus)
 		_jump->IsJumping())
 	{
 		_hangtime->Start();
+		_jump->GrantExtraJump();
 	}
 }
 
@@ -320,7 +327,25 @@ void Player::CancelAttackCube()
 	if(_jump && _jump->IsJumping() && _hangtime)
 	{
 		_hangtime->Start();
+		_jump->GrantExtraJump();
 	}
+}
+
+void Player::RotateToward(const Vec4& targetDir, float maxAngle)
+{
+	if(v::VSize(targetDir) <= 0.0f)
+	{
+		return;
+	}
+
+	QuateMatVec qmv;
+
+	Quate currentQuat = qmv.LookRotation(_dir, Vec4::UnitY());// 現在の向きを四元数に変換
+	Quate target = qmv.LookRotation(targetDir, Vec4::UnitY());// 目標の向きを四元数に変換
+	Quate rotation = qmv.Slerp(currentQuat, target, maxAngle).Normalized();// 現在の向きと目標の向きの間を補間して回転量を計算
+
+	_dir = qmv.RotateVector(rotation, Vec4::UnitZ()).Normalized();// 回転後の向きを更新
+
 }
 
 // 計算処理
@@ -371,7 +396,7 @@ bool Player::Render()
 		_cam->DrawDebugFov();
 	}
 
-	//DrawFormatString(10, 10, GetColor(255, 255, 255), "Player Pos: (%.2f, %.2f, %.2f)", _pos.x, _pos.y, _pos.z);
+	DrawFormatString(10, 10, GetColor(255, 255, 255), "Player Pos: (%.2f, %.2f, %.2f)", _pos.x, _pos.y, _pos.z);
 
     return true;
 

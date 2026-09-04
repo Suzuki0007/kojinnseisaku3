@@ -97,6 +97,9 @@ namespace mymath
 		return dist2 <= radius * radius;
 	}
 
+	// 線分とAABBの交差判定
+	bool LineIntersectAABB(const Vec4& from, const Vec4& to, const AABB& box);
+
 }
 
 
@@ -115,6 +118,7 @@ namespace min
 		}
 	}
 }
+
 
 namespace max
 {
@@ -188,7 +192,7 @@ namespace easing
 	float EasingOutQuint(float cnt, float start, float end, float frames);
 	float EasingInOutQuint(float cnt, float start, float end, float frames);
 	float EasingInSine(float cnt, float start, float end, float frames);
-	float EasingOutSine(float cnt, float start, float end, float frames);
+	float EasingOutSine(float cnt, float frames, float start = 1.0f, float end = 0.0f);
 	float EasingInOutSine(float cnt, float start, float end, float frames);
 	float EasingInExpo(float cnt, float start, float end, float frames);
 	float EasingOutExpo(float cnt, float start, float end, float frames);

@@ -51,6 +51,7 @@ public:
 	void ChangeAnim(CharaBase::STATUS next);
 	void UpdateJump();
 	void CancelAttackCube() override;
+	void RotateToward(const Vec4& targetDir, float maxAngle);
 
 	void Targeting(InputDevice& input);
 

@@ -188,6 +188,7 @@ bool ModeGame::DebugRender()
 		DrawFormatString(x, y + 54, color, "敵に当たったらコマンドバトル");
 	}
 
+	
 	return true;
 }
 

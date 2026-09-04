@@ -11,5 +11,6 @@ public:
 	virtual ~ITargetProvider() = default;
 
 	virtual std::vector<CharaBase*> GetTargets() const = 0;
+	virtual bool IsBlocked(const Vec4& from, const Vec4& to) const = 0;
 };
 

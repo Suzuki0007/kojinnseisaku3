@@ -35,6 +35,10 @@
     <ClInclude Include="source\battlestate.h" />
     <ClInclude Include="source\bombeffect.h" />
     <ClInclude Include="source\camera.h" />
+    <ClInclude Include="source\camerashake.h" />
+    <ClInclude Include="source\camerashakemanager.h" />
+    <ClInclude Include="source\camerashakestate.h" />
+    <ClInclude Include="source\camerashakestrategy.h" />
     <ClInclude Include="source\charabase.h" />
     <ClInclude Include="source\cube.h" />
     <ClInclude Include="source\dashcomponent.h" />
@@ -55,12 +59,16 @@
     <ClInclude Include="source\goal.h" />
     <ClInclude Include="source\hangtimecomponent.h" />
     <ClInclude Include="source\healthcomponent.h" />
+    <ClInclude Include="source\hitinfo.h" />
+    <ClInclude Include="source\hitstopmanager.h" />
     <ClInclude Include="source\kickeffect.h">
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
     </ClInclude>
     <ClInclude Include="source\modegameover.h" />
+    <ClInclude Include="source\normalshakestrategy.h" />
     <ClInclude Include="source\rollcomponent.h" />
+    <ClInclude Include="source\screenmotionblur.h" />
     <ClInclude Include="source\stagedefinition.h" />
     <ClInclude Include="source\targetprovider.h" />
     <ClInclude Include="source\jumpcomponet.h" />
@@ -122,6 +130,8 @@
     </ClCompile>
     <ClCompile Include="source\bombeffect.cpp" />
     <ClCompile Include="source\camera.cpp" />
+    <ClCompile Include="source\camerashake.cpp" />
+    <ClCompile Include="source\camerashakemanager.cpp" />
     <ClCompile Include="source\charabase.cpp" />
     <ClCompile Include="source\cube.cpp" />
     <ClCompile Include="source\dashcomponent.cpp" />
@@ -161,6 +171,7 @@
     <ClCompile Include="source\modemenu.cpp" />
     <ClCompile Include="source\modetitle.cpp" />
     <ClCompile Include="source\neartargetstrategy.cpp" />
+    <ClCompile Include="source\normalshakestrategy.cpp" />
     <ClCompile Include="source\objectbase.cpp" />
     <ClCompile Include="source\objectmanagerbase.cpp" />
     <ClCompile Include="source\pch.cpp">
@@ -177,6 +188,7 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+    <ClCompile Include="source\screenmotionblur.cpp" />
     <ClCompile Include="source\shadowmapcomponent.cpp" />
     <ClCompile Include="source\skysphere.cpp" />
     <ClCompile Include="source\statemanager.cpp" />
@@ -190,6 +202,18 @@
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</ExcludedFromBuild>
       <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</ExcludedFromBuild>
     </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <FxCompile Include="source\distortion.hlsl">
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Debug|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|Win32'">Pixel</ShaderType>
+      <ShaderType Condition="'$(Configuration)|$(Platform)'=='Release|x64'">Pixel</ShaderType>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">5.0</ShaderModel>
+      <ShaderModel Condition="'$(Configuration)|$(Platform)'=='Release|x64'">5.0</ShaderModel>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">%(Filename).cso</ObjectFileOutput>
+      <ObjectFileOutput Condition="'$(Configuration)|$(Platform)'=='Release|x64'">%(Filename).cso</ObjectFileOutput>
+    </FxCompile>
   </ItemGroup>
   <PropertyGroup Label="Globals">
     <VCProjectVersion>17.0</VCProjectVersion>

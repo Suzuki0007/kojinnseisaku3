@@ -34,8 +34,19 @@ void JumpComponent::RequestJump()
 
 void JumpComponent::Jump()
 {
+	float height = 0.0f;
+	if(_isGround)
+	{
+		height = _jumpHeight; // 地面にいる場合は通常のジャンプ高さ
+
+	}
+	else
+	{
+		height = _airJumpHeight; // 空中にいる場合は空中ジャンプ高さ
+	}
+
 	_currentJumpCount++; // ジャンプ回数を増やす
-	_currentGravity = _jumpHeight; // ジャンプの高さを設定する
+	_currentGravity = height; // ジャンプの高さを設定する
 	_isGround = false; // 着地していない状態にする
 
 	Vec4 pos = _owner->GetPos();
@@ -96,4 +107,12 @@ void JumpComponent::ResetJumpState()
 {
 	_currentJumpCount = 0; // ジャンプ回数をリセットする
 	_jumpRequest = false; // ジャンプ要求をリセットする
+}
+
+void JumpComponent::GrantExtraJump()
+{
+	if(_currentJumpCount > 0)
+	{
+		_currentJumpCount--; // ジャンプ回数を増やす
+	}
 }

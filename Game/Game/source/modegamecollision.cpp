@@ -170,12 +170,6 @@ bool ModeGame::CharaToCubeCollision(CharaBase* chara, Cube* cube)
 		return false;
 	}
 
-	// プレイヤーが攻撃中でCubeに接触したら、攻撃をキャンセルする
-	if(chara == player && chara->GetStatus() == CharaBase::STATUS::ATTACK)
-	{
-		chara->CancelAttackCube();
-	}
-
 	float dxmin = box.min.x - (pos.x + r);
 	float xmin = dxmin * dxmin;
 	float dxmax = box.max.x - (pos.x - r);
@@ -236,11 +230,17 @@ bool ModeGame::CharaToCubeCollision(CharaBase* chara, Cube* cube)
 		if(land_y == 0.0f)
 		{
 			_landed_on_up = true;
+			_cubeCoyoteFrame = CUBE_COYOTE_MAX;
 		}
 	}
 	else if(absz <= absx && absz <= absy)
 	{
 		pos.z += resolverz;
+	}
+
+	if(chara == player && chara->GetStatus() == CharaBase::STATUS::ATTACK && !_landed_on_up)
+	{
+		chara->CancelAttackCube();
 	}
 
 	chara->SetPos(pos);
@@ -319,6 +319,12 @@ bool ModeGame::CharaToCubeCollision(CharaBase* chara, Cube* cube)
 bool ModeGame::LandCheck()
 {
 	auto player = GetPlayer();
+
+	if(player->GetStatus() == CharaBase::STATUS::ATTACK)
+	{
+		return false;
+	}
+
 	if(player->GetLand())
 	{
 		bool is_ground = false;
@@ -361,6 +367,10 @@ bool ModeGame::LandCheck()
 		{
 			player->SetLand(false);
 			_landed_on_up = false;
+		}
+		else if(!_landed_on_up && _cubeCoyoteFrame > 0)
+		{
+			_cubeCoyoteFrame--;
 		}
 	}
 	return false;
@@ -500,6 +510,11 @@ bool ModeGame::UpdateCheckAttackCollision()
 			auto& enemies = GetEnemies();
 			for(auto& enemy : enemies)
 			{
+				if(!enemy->IsAlive())
+				{
+					continue;
+				}
+
 				if(attack.isHit)
 				{
 					// すでに当たっているならスキップ
@@ -522,6 +537,15 @@ bool ModeGame::UpdateCheckAttackCollision()
 					attack.isHit = true;
 					// ダメージ処理
 					enemy->Damage(attack.damage);
+
+					_hitSubject.Notify(
+						{
+							player,
+							enemy.get(),
+							attack.damage,
+							enemy->GetPos(),
+							0.15f
+						});
 
 					if(!enemy->IsAlive())
 					{

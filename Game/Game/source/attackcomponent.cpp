@@ -84,6 +84,7 @@ void AttackComponent::Update(float deltaTime)
 			pos.x += moveDir.x * moveAmount;
 			pos.y += moveDir.y * moveAmount;
 			pos.z += moveDir.z * moveAmount;
+
 			_owner->SetPos(pos);
 		}
 		else
@@ -154,6 +155,27 @@ Vec4 AttackComponent::GetBackPos() const
 
 void AttackComponent::RequestAttack()
 {
+	TargetComponent* target = _owner->GetTargetComponent();
+	
+	// 攻撃対象がいない場合は攻撃を保留
+	if(!target || !target->HasTarget())
+	{
+		_pendingAttack = false;
+
+		if(_owner->GetStatus() == STA::ATTACK)
+		{
+			if(_kickEffect)
+			{
+				_kickEffect->EndAttack();
+				_kickEffect = nullptr;
+			}
+
+			_owner->SetStatus(STA::WAIT);
+		}
+
+		return;
+	}
+
 	if(_owner->GetStatus() != STA::ATTACK)
 	{
 		TargetComponent* target = _owner->GetTargetComponent();

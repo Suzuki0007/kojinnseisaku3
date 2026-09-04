@@ -227,9 +227,6 @@
     <ClInclude Include="source\CFile\CFile.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
-    <ClInclude Include="source\mymath.h">
-      <Filter>ヘッダー ファイル</Filter>
-    </ClInclude>
     <ClInclude Include="source\Manager\timemanager.h">
       <Filter>ヘッダー ファイル</Filter>
     </ClInclude>
@@ -428,11 +425,17 @@
     <ClInclude Include="source\Manager\effekseermanager.h">
       <Filter>ヘッダー ファイル\エフェクシアマネージャー</Filter>
     </ClInclude>
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-    <None Include="ClassDiagram1.cd">
+    <ClInclude Include="source\observer\subject.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\observer\observer.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\observer\observerbase.h">
+      <Filter>ヘッダー ファイル</Filter>
+    </ClInclude>
+    <ClInclude Include="source\mymath.h">
       <Filter>ソース ファイル</Filter>
-    </None>
+    </ClInclude>
   </ItemGroup>
 </Project>

@@ -32,6 +32,7 @@ public:
 	Vec4 GetUp() const;
 
 	void DrawDebugFov(float length = 3000.0f) const;
+	void ApplyShakeOffset(const Vec4& offset);
 
 	Vec4 _v_pos;
 	Vec4 _v_target;

@@ -26,6 +26,11 @@ bool TargetComponent::AcquireTarget()
 
 	auto targets = _provider->GetTargets();
 
+	std::erase_if(targets, [this](CharaBase* target)
+		{
+			return _provider->IsBlocked(_owner->GetPos(), target->GetPos());
+		});
+
 	if(targets.empty())
 	{
 		return false;

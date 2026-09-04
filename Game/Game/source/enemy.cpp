@@ -49,10 +49,38 @@ bool Enemy::IsExceutionAction() const
 	return false;
 }
 
+bool Enemy::RespawnTime()
+{
+	if(!_is_alive)
+	{
+		_deadElapsedTime += TimeManager::GetInstance()->GetDeltaTime();
+
+		// リスポーン時間を超えたら復活
+		if(_deadElapsedTime >= enemy::RESPAWN_TIME)
+		{
+			_is_alive = true;
+			_hp = 10.0f;
+			_deadElapsedTime = 0.0f;
+
+			_status = STATUS::WAIT;
+			_play_time = 0.0f;
+		}
+		else
+		{
+			return true;
+		}
+	}
+
+	return false;
+}
+
+
 // 計算処理
 bool Enemy::Process()
 {
 	base::Process();
+
+	RespawnTime();
 
     CharaBase::STATUS old_status = _status;
    
@@ -115,6 +143,18 @@ bool Enemy::Process()
 	}
 
 	return true;
+}
+
+float Enemy::GetRespawnRemainingTime() const
+{
+	if(_is_alive)
+	{
+		return 0.0f;
+	}
+
+	const float remainingTime = enemy::RESPAWN_TIME	 - _deadElapsedTime;
+
+	return remainingTime > 0.0f ? remainingTime : 0.0f;
 }
 
 // 描画処理

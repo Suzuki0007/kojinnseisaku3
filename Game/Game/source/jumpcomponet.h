@@ -5,7 +5,8 @@ namespace jump
 {
 	static constexpr float GRAVITY = 0.98f; // 重力
 	static constexpr float JUMP_HEIGHT = 20.0f; // ジャンプの高さ
-	static constexpr int MAX_JUMP_COUNT = 2; // ジャンプの最大回数
+	static constexpr float AIR_JUMP_HEIGHT = 26.0f;// 空中ジャンプの高さ
+	static constexpr int MAX_JUMP_COUNT = 1; // ジャンプの最大回数
 }
 
 
@@ -25,6 +26,7 @@ public:
 	void Land();// 着地処理
 	void UpdateWithoutFall();
 	void ResetJumpState();// ジャンプ状態をリセットする
+	void GrantExtraJump();// 空中ジャンプを許可する
 
 	void Update(float deltaTime) override;
 
@@ -37,6 +39,7 @@ public:
 	// セッター
 	void SetGravity(float g) { _gravity = g; }// 重力を設定する
 	void SetJumpHeight(float h) { _jumpHeight = h; }// ジャンプの高さを設定する
+	void SetAirJumpHeight(float h) { _airJumpHeight = h; }
 	void SetMaxJumpCount(int count) { _maxJumpCount = count; }// ジャンプの最大回数を設定する
 	void SetGround(bool ground);
 
@@ -44,6 +47,7 @@ private:
 	int _maxJumpCount{ jump::MAX_JUMP_COUNT };
 	float _gravity{ jump::GRAVITY };
 	float _jumpHeight{ jump::JUMP_HEIGHT };
+	float _airJumpHeight{ jump::AIR_JUMP_HEIGHT };
 
 	int _currentJumpCount{ 0 };
 	float _currentGravity{ 0.0f };

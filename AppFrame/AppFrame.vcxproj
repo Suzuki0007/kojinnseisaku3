@@ -1,4 +1,4 @@
-<?xml version="1.0" encoding="utf-8"?>
+﻿<?xml version="1.0" encoding="utf-8"?>
 <Project DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <ItemGroup Label="ProjectConfigurations">
     <ProjectConfiguration Include="Debug|Win32">
@@ -222,7 +222,16 @@
     <ClInclude Include="source\math\vectorconvert.h" />
     <ClInclude Include="source\Mode\ModeBase.h" />
     <ClInclude Include="source\Mode\ModeServer.h" />
-    <ClInclude Include="source\mymath.h" />
+    <ClInclude Include="source\mymath.h">
+      <DeploymentContent>true</DeploymentContent>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">false</ExcludedFromBuild>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Debug|x64'">true</DeploymentContent>
+      <ExcludedFromBuild Condition="'$(Configuration)|$(Platform)'=='Release|x64'">false</ExcludedFromBuild>
+      <DeploymentContent Condition="'$(Configuration)|$(Platform)'=='Release|x64'">true</DeploymentContent>
+    </ClInclude>
+    <ClInclude Include="source\observer\observer.h" />
+    <ClInclude Include="source\observer\observerbase.h" />
+    <ClInclude Include="source\observer\subject.h" />
     <ClInclude Include="source\pch.h" />
     <ClInclude Include="source\Resource\resourcefacade.h" />
     <ClInclude Include="source\Resource\resourceserver.h" />
@@ -375,10 +384,6 @@
     </ClCompile>
     <ClCompile Include="source\Sound\sounditembase.cpp" />
     <ClCompile Include="source\Sound\soundserver.cpp" />
-  </ItemGroup>
-  <ItemGroup>
-    <None Include="ClassDiagram.cd" />
-    <None Include="ClassDiagram1.cd" />
   </ItemGroup>
   <Import Project="$(VCTargetsPath)\Microsoft.Cpp.targets" />
   <ImportGroup Label="ExtensionTargets">

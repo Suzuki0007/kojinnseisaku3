@@ -20,3 +20,4 @@
 #include "math/quaternionmatvec.h"
 #include "manager/effekseermanager.h"
 #include "Manager/timemanager.h"
+#include "observer/observerbase.h"

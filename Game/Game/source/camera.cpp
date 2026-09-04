@@ -23,6 +23,9 @@ namespace
 
 	constexpr float clipNear = 2.0f;// クリップ面の近距離
 	constexpr float clipFar = 10000.0f;// クリップ面の遠距離
+
+	constexpr float attackCameraFollow = 0.5f;
+	constexpr float attackCameraMaxDistance = 100.0f;
 }
 
 bool Camera::Initialize()
@@ -69,6 +72,16 @@ Vec4 Camera::GetRight() const
 Vec4 Camera::GetUp() const
 {
 	return v::VNorm(v::VCross(GetRight(), GetForward()));
+}
+
+void Camera::ApplyShakeOffset(const Vec4& offset)
+{
+	Vec4 right = GetRight();
+	Vec4 up = GetUp();
+
+	Vec4 shakeOffset = v::VAdd(v::VScale(right, offset.x), v::VScale(up, offset.y));
+	_v_pos = v::VAdd(_v_pos, shakeOffset);
+	_v_target = v::VAdd(_v_target, shakeOffset);
 }
 
 bool Camera::Process()

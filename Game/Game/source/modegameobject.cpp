@@ -31,6 +31,9 @@ bool ModeGame::ObjectInitialize()
 	_goal = std::make_shared<Goal>();
 	_chara.emplace_back(_goal.get());
 
+	_hitStopManager = std::make_unique<HitStopManager>(_hitSubject);
+	_cameraShakeManager = std::make_unique<CameraShakeManager>(_hitSubject);
+
 	// プレイヤー初期化
 	auto* pm = PlayerManager::GetInstance();
 	pm->RegisterType();
@@ -46,7 +49,7 @@ bool ModeGame::ObjectInitialize()
 		auto* targetComponent = player->AddComponent<TargetComponent>
 			(
 				std::make_unique<NearTargetScreenStrategy>(),
-				std::make_unique<EnemyTargetProvider>()
+				std::make_unique<EnemyTargetProvider>(_cube)
 			);
 
 		player->SetTargetComponent(targetComponent);

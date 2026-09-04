@@ -11,13 +11,27 @@
 #include "PlayerManager.h"
 #include "enemymanager.h"
 #include "effectmanager.h"
+#include "hitstopmanager.h"
+#include "camerashakemanager.h"
 #include "skysphere.h"
 #include "goal.h"
+#include "hitinfo.h"
+#include "screenmotionblur.h"
 //#include "scenebase.h"
 //#include "gameobserver.h"
 
 #define CUBE_COUNT 6
 #define ENEMY_COUNT 6
+
+namespace camera
+{
+	static constexpr float PLAYER_TARGET = 60.0f; // プレイヤーの注視点の高さ
+	static constexpr float CAMERA_ATTACK_TIME = 0.8f; // 攻撃開始からカメラが元の位置に戻るまでの時間
+	static constexpr float CAMERA_ATTACK_MAX = 0.5f; // 攻撃開始時のカメラの最大移動量
+
+	static constexpr float CAMERA_ATTACK_FOLLOW = 0.5f;
+	static constexpr float CAMERA_ATTACK_MAX_DISTANCE = 100.0f;
+}
 
 class ModeGame : public ModeBase
 {
@@ -89,6 +103,9 @@ private:
 	// プレイヤーのヘルパー関数
 	PlayerBase* GetPlayer() const;
 
+	int _sceneScreenHandle{ -1 };
+	int _distortionPixelShaderHandle{ -1 };
+
 protected:
 	Camera* _camera;
 	// キャラクタ管理
@@ -102,6 +119,15 @@ protected:
 	std::shared_ptr<Goal> _goal;
 	// キューブ
 	std::vector<std::shared_ptr<Cube>> _cube;
+	
+	// ヒット情報の通知用
+	Subject<HitInfo> _hitSubject;
+	// カメラシェイク管理
+	std::unique_ptr<CameraShakeManager> _cameraShakeManager;
+	// ヒットストップ管理
+	std::unique_ptr<HitStopManager> _hitStopManager;
+	// 画面の歪み
+	ScreenMotionBlur _screenMotionBlur;
 	// デバッグ用
 	bool _d_view_collision;
 	bool _d_use_collision;
@@ -122,6 +148,20 @@ protected:
 	//std::unique_ptr<SceneBase> _sceneBase;
 	//GameState _gameState{ GameState::World };
 	int _enemyIndexBattle{ -1 };// 現在戦っている敵の配列番号
+
+	bool _wasAttacking{ false };// 前フレームで攻撃中だったかどうかのフラグ
+
+	Vec4 _cameraAttackTarget;
+	Vec4 _cameraAttackPreviousPlayerPos;
+	Vec4 _cameraAttackOffset;
+	Vec4 _cameraAttackStartTarget{};
+	bool _wasCameraAttack{ false };// 前フレームでカメラ攻撃中だったかどうかのフラグ
+	float _cameraAttackTime{ 0.0f };// カメラ攻撃中の経過時間
+
+
+
+	int _cubeCoyoteFrame{ 0 };// キューブのクイックタイムのフレーム数
+	static constexpr int CUBE_COYOTE_MAX{ 8 };// キューブのクイックタイムの最大フレーム数
 
 	// lua用
 	lua_State* _L;
